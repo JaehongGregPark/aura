@@ -7,60 +7,55 @@
     <title>AURA | AI Beauty Curation</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'aura/styles.css' %}?v=20260704-en-output">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'aura/styles.css' %}?v=20260705-language-chat-fix">
   </head>
   <body>
     <main class="app-shell">
       <section class="aura-frame" aria-label="AURA onboarding and style report">
         <header class="topbar">
-          <button class="icon-button" type="button" aria-label="Open menu">
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
           <div class="brand">AURA</div>
-          <div class="language-toggle" aria-label="Language">
-            <button class="lang-button is-active" type="button" data-lang="ko">KR</button>
-            <button class="lang-button" type="button" data-lang="en">EN</button>
+
+          <nav class="category-nav" aria-label="AURA sections">
+            <button class="category-tab is-active" type="button" data-area="makeup">메이크업</button>
+            <button class="category-tab" type="button" data-area="hair">헤어</button>
+            <button class="category-tab" type="button" data-area="fashion">패션</button>
+            <button class="category-tab" type="button" data-area="interior">인테리어</button>
+          </nav>
+
+          <div class="top-actions">
+            <div class="language-toggle" aria-label="Language">
+              <button class="lang-button is-active" type="button" data-lang="ko">KR</button>
+              <button class="lang-button" type="button" data-lang="en">EN</button>
+            </div>
+            <button class="auth-button" type="button" data-auth="login">로그인</button>
+            <button class="auth-button is-guest" type="button" data-auth="guest">게스트</button>
           </div>
         </header>
 
-        <section class="concept-picker" aria-label="Portfolio concept selection">
-          <div>
-            <p class="eyebrow" data-i18n="conceptEyebrow">PORTFOLIO OPTIONS</p>
-            <h1 id="conceptTitle">첫 화면 콘셉트를 선택하세요.</h1>
-            <p class="lead" id="conceptLead">1안은 현재 AURA 큐레이션을 유지하고, 2안과 3안은 완전히 다른 포트폴리오 무드로 전환됩니다.</p>
-          </div>
-          <div class="concept-options">
-            <button class="concept-option is-active" type="button" data-concept="concept1">
-              <strong id="conceptOneTitle">1안</strong>
-              <span id="conceptOneCopy">AURA 뷰티 큐레이션</span>
-            </button>
-            <button class="concept-option" type="button" data-concept="concept2">
-              <strong id="conceptTwoTitle">2안</strong>
-              <span id="conceptTwoCopy">패션 에디토리얼 아틀리에</span>
-            </button>
-            <button class="concept-option" type="button" data-concept="concept3">
-              <strong id="conceptThreeTitle">3안</strong>
-              <span id="conceptThreeCopy">리빙 웰니스 포트폴리오</span>
-            </button>
-          </div>
-        </section>
-
         <div class="content-grid">
-          <section class="intro-panel">
-            <p class="eyebrow" data-i18n="eyebrow">AI 토탈 뷰티 큐레이션</p>
-            <h1 data-i18n="title">메이크업에서 시작해 나만의 라이프스타일까지.</h1>
-            <p class="lead" data-i18n="lead">관심사, 스타일, 분위기를 고르면 AURA가 메이크업 중심의 개인 취향 리포트와 확장 큐레이션을 생성합니다.</p>
-            <div class="journey-strip" aria-label="AURA journey">
-              <span data-i18n="journeyMakeup">Makeup</span>
-              <b aria-hidden="true">→</b>
-              <span data-i18n="journeyHair">Hair</span>
-              <b aria-hidden="true">→</b>
-              <span data-i18n="journeyFashion">Fashion</span>
-              <b aria-hidden="true">→</b>
-              <span data-i18n="journeyInterior">Interior</span>
+          <section class="intro-panel" aria-label="AURA section preview">
+            <div>
+              <p class="eyebrow" data-i18n="eyebrow">AI 토탈 스타일 큐레이션</p>
+              <h1 data-i18n="title">메이크업에서 시작해 나에게 맞는 라이프스타일까지.</h1>
+              <p class="lead" data-i18n="lead">AURA가 메이크업, 헤어, 패션, 인테리어를 하나의 취향 흐름으로 연결합니다.</p>
+            </div>
+
+            <div class="section-preview">
+              <div>
+                <span class="section-kicker" data-i18n="sectionKicker">지금 보고 있는 섹션</span>
+                <strong id="activeAreaTitle">메이크업</strong>
+                <p id="activeAreaCopy">피부 표현, 색조, 분위기를 먼저 분석해 전체 스타일의 기준을 잡습니다.</p>
+              </div>
+              <div class="journey-strip" aria-label="AURA journey">
+                <span data-area-label="makeup">Makeup</span>
+                <b aria-hidden="true">/</b>
+                <span data-area-label="hair">Hair</span>
+                <b aria-hidden="true">/</b>
+                <span data-area-label="fashion">Fashion</span>
+                <b aria-hidden="true">/</b>
+                <span data-area-label="interior">Interior</span>
+              </div>
             </div>
           </section>
 
@@ -79,13 +74,13 @@
 
             <div class="question-area">
               <p class="question-label" id="questionLabel">STEP 1</p>
-              <h3 id="questionTitle">관심사를 선택해 주세요.</h3>
+              <h3 id="questionTitle">가장 먼저 보고 싶은 섹션은 무엇인가요?</h3>
               <div class="option-grid" id="optionGrid"></div>
             </div>
 
             <div class="quiz-actions">
-              <button class="secondary-button" type="button" id="prevButton" data-i18n="prev">이전</button>
-              <button class="primary-button" type="button" id="nextButton" data-i18n="next">다음</button>
+              <button class="secondary-button" type="button" id="prevButton">이전</button>
+              <button class="primary-button" type="button" id="nextButton">다음</button>
             </div>
           </section>
 
@@ -93,21 +88,21 @@
             <div class="panel-heading">
               <div>
                 <p class="eyebrow" data-i18n="reportEyebrow">AI 스타일 리포트</p>
-                <h2 id="reportTitle">Soft Glowing Makeup</h2>
+                <h2 id="reportTitle">Soft Glow Makeup</h2>
               </div>
-              <span class="status-pill" data-i18n="ready">생성 준비</span>
+              <span class="status-pill" data-i18n="ready">실시간 생성</span>
             </div>
 
             <div class="palette-row" id="paletteRow" aria-label="My color palette"></div>
 
             <div class="report-body">
               <div class="virtual-card">
-                <img src="{% static 'aura/assets/aura-reference.webp' %}" alt="AURA consultation report reference">
+                <img src="{% static 'aura/assets/aura-reference.webp' %}" alt="AURA style reference">
               </div>
               <div class="summary-card">
                 <h3 data-i18n="summaryTitle">AI Style Summary</h3>
                 <div class="tag-list" id="tagList"></div>
-                <p id="summaryText">선택한 취향을 바탕으로 은은한 광채, 부드러운 라벤더 톤, 자연스러운 스타일 확장성을 우선 추천합니다.</p>
+                <p id="summaryText">선택한 취향을 바탕으로 자연스러운 스타일 방향을 추천합니다.</p>
               </div>
             </div>
           </section>
@@ -115,15 +110,15 @@
           <section class="roadmap-panel" aria-label="Product roadmap">
             <article>
               <strong data-i18n="phaseOne">Phase 1</strong>
-              <span data-i18n="phaseOneText">취향 분석 엔진, AI 리포트, 기본 큐레이션 UI</span>
+              <span data-i18n="phaseOneText">메이크업 취향 분석과 AI 리포트</span>
             </article>
             <article>
               <strong data-i18n="phaseTwo">Phase 2</strong>
-              <span data-i18n="phaseTwoText">전문가 상담 섹션과 1:1 매칭</span>
+              <span data-i18n="phaseTwoText">전문가 상담과 1:1 매칭</span>
             </article>
             <article>
               <strong data-i18n="phaseThree">Phase 3</strong>
-              <span data-i18n="phaseThreeText">상품 연동과 스타일링 세트 커머스</span>
+              <span data-i18n="phaseThreeText">헤어, 패션, 인테리어까지 확장</span>
             </article>
           </section>
         </div>
@@ -134,15 +129,15 @@
       <div class="assist-card" id="assistCard" hidden>
         <div class="assist-card-head">
           <div>
-            <p class="eyebrow" id="assistEyebrow">AURA Care</p>
-            <h2 id="assistTitle">스타일 상담</h2>
+            <p class="eyebrow" id="assistEyebrow">AURA Chat</p>
+            <h2 id="assistTitle">취향 상담</h2>
           </div>
           <button class="assist-close" type="button" id="assistClose" aria-label="Close consultation panel">×</button>
         </div>
-        <p class="assist-copy" id="assistCopy">현재 취향 리포트를 바탕으로 메이크업, 헤어, 패션 연결 상담을 준비하고 있어요.</p>
+        <p class="assist-copy" id="assistCopy">선택한 섹션과 리포트를 바탕으로 질문을 이어갈 수 있어요.</p>
         <div class="assist-chips" id="assistChips"></div>
         <div class="assist-summary" id="assistSummary" hidden></div>
-        <button class="assist-primary" type="button" id="assistPrimary">상담 요청</button>
+        <button class="assist-primary" type="button" id="assistPrimary">채팅 시작</button>
       </div>
 
       <div class="assist-actions">
@@ -150,7 +145,7 @@
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M5 6.8A4.8 4.8 0 0 1 9.8 2h4.4A4.8 4.8 0 0 1 19 6.8v3.4a4.8 4.8 0 0 1-4.8 4.8h-2.7L7 19v-4.2a4.8 4.8 0 0 1-2-3.9V6.8Z"/>
           </svg>
-          <span id="chatActionLabel">챗</span>
+          <span id="chatActionLabel">채팅</span>
         </button>
         <button class="assist-action is-accent" type="button" data-assist="expert" aria-label="Open expert consultation">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -161,7 +156,7 @@
       </div>
     </aside>
 
-    <script src="{% static 'aura/data.js' %}?v=20260704-en-output"></script>
-    <script src="{% static 'aura/app.js' %}?v=20260704-en-output"></script>
+    <script src="{% static 'aura/data.js' %}?v=20260705-language-chat-fix"></script>
+    <script src="{% static 'aura/app.js' %}?v=20260705-language-chat-fix"></script>
   </body>
 </html>

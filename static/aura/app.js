@@ -1,100 +1,26 @@
-// Concept/language content lives in data.js (loaded before this file in
-// index.html). This file only contains rendering + interaction logic.
-
 let lang = "ko";
-let activeConcept = "concept1";
+let activeArea = "makeup";
 let step = 0;
-let answers = {};
+let answers = {
+  area: "makeup",
+  style: "romantic",
+  mood: "calm",
+};
+let autoCycleId = null;
+let userHasChosenArea = false;
 let assistMode = "chat";
-let consultStep = 0;
+let chatStarted = false;
 let expertRequested = false;
 
-const consultAnswers = {
-  occasion: null,
-  concern: null,
-  finish: null,
-};
-
-const consultQuestions = {
-  ko: [
-    {
-      key: "occasion",
-      label: "1. 상담 목적",
-      title: "어떤 상황의 메이크업이 필요하세요?",
-      options: [
-        ["daily", "데일리 보정"],
-        ["event", "중요한 일정"],
-        ["shoot", "촬영/프로필"],
-        ["product", "제품 추천"],
-      ],
-    },
-    {
-      key: "concern",
-      label: "2. 핵심 고민",
-      title: "가장 먼저 해결하고 싶은 포인트는?",
-      options: [
-        ["redness", "홍조"],
-        ["dark-circles", "다크서클"],
-        ["dryness", "건조함"],
-        ["lasting", "지속력"],
-        ["pores", "모공"],
-      ],
-    },
-    {
-      key: "finish",
-      label: "3. 원하는 결과",
-      title: "상담 후 어떤 인상을 원하세요?",
-      options: [
-        ["glow", "자연스러운 광채"],
-        ["defined", "또렷한 인상"],
-        ["calm", "차분한 무드"],
-        ["statement", "화려한 포인트"],
-      ],
-    },
-  ],
-  en: [
-    {
-      key: "occasion",
-      label: "1. Goal",
-      title: "What situation is this makeup for?",
-      options: [
-        ["daily", "Daily polish"],
-        ["event", "Important event"],
-        ["shoot", "Profile shoot"],
-        ["product", "Product picks"],
-      ],
-    },
-    {
-      key: "concern",
-      label: "2. Concern",
-      title: "What should the consultation solve first?",
-      options: [
-        ["redness", "Redness"],
-        ["dark-circles", "Dark circles"],
-        ["dryness", "Dryness"],
-        ["lasting", "Lasting power"],
-        ["pores", "Pores"],
-      ],
-    },
-    {
-      key: "finish",
-      label: "3. Result",
-      title: "What impression do you want after the consult?",
-      options: [
-        ["glow", "Natural glow"],
-        ["defined", "Defined look"],
-        ["calm", "Calm mood"],
-        ["statement", "Statement point"],
-      ],
-    },
-  ],
-};
+const areaOrder = ["makeup", "hair", "fashion", "interior"];
 
 const body = document.body;
-const brand = document.querySelector(".brand");
-const conceptTitle = document.querySelector("#conceptTitle");
-const conceptLead = document.querySelector("#conceptLead");
-const conceptButtons = document.querySelectorAll(".concept-option");
+const categoryTabs = document.querySelectorAll(".category-tab");
+const langButtons = document.querySelectorAll(".lang-button");
+const authButtons = document.querySelectorAll(".auth-button");
+const activeAreaTitle = document.querySelector("#activeAreaTitle");
+const activeAreaCopy = document.querySelector("#activeAreaCopy");
+const journeyLabels = document.querySelectorAll("[data-area-label]");
 const optionGrid = document.querySelector("#optionGrid");
 const questionLabel = document.querySelector("#questionLabel");
 const questionTitle = document.querySelector("#questionTitle");
@@ -111,71 +37,23 @@ const assistEyebrow = document.querySelector("#assistEyebrow");
 const assistTitle = document.querySelector("#assistTitle");
 const assistCopy = document.querySelector("#assistCopy");
 const assistChips = document.querySelector("#assistChips");
-let assistSummary = document.querySelector("#assistSummary");
+const assistSummary = document.querySelector("#assistSummary");
 const assistPrimary = document.querySelector("#assistPrimary");
 const assistClose = document.querySelector("#assistClose");
 const assistButtons = document.querySelectorAll(".assist-action");
 const chatActionLabel = document.querySelector("#chatActionLabel");
 const expertActionLabel = document.querySelector("#expertActionLabel");
 
-if (!assistSummary) {
-  assistSummary = document.createElement("div");
-  assistSummary.className = "assist-summary";
-  assistSummary.id = "assistSummary";
-  assistSummary.hidden = true;
-  assistPrimary.before(assistSummary);
-}
-
 function data() {
   return portfolioData[lang];
 }
 
-function concept() {
-  return data().concepts[activeConcept];
+function area() {
+  return data().areas[activeArea];
 }
 
-function resetAnswers() {
-  answers = { ...concept().defaults };
-  step = 0;
-}
-
-function translate() {
-  const ui = data().conceptUi;
-  document.documentElement.lang = lang;
-  document.querySelector("[data-i18n='conceptEyebrow']").textContent = ui.eyebrow;
-  conceptTitle.textContent = ui.title;
-  conceptLead.textContent = ui.lead;
-  ui.options.forEach(([id, title, copy], index) => {
-    const button = conceptButtons[index];
-    button.dataset.concept = id;
-    button.querySelector("strong").textContent = title;
-    button.querySelector("span").textContent = copy;
-  });
-  applyConcept(false);
-}
-
-function applyConcept(shouldReset = true) {
-  if (shouldReset) resetAnswers();
-  const current = concept();
-  body.className = activeConcept;
-  brand.textContent = current.brand;
-  setText("eyebrow", current.eyebrow);
-  setText("title", current.title);
-  setText("lead", current.lead);
-  setText("quizEyebrow", current.quizEyebrow);
-  setText("quizTitle", current.quizTitle);
-  setText("reportEyebrow", current.reportEyebrow);
-  setText("ready", data().common.ready);
-  setText("summaryTitle", current.summaryTitle);
-  ["journeyMakeup", "journeyHair", "journeyFashion", "journeyInterior"].forEach((key, index) => setText(key, current.journey[index]));
-  ["phaseOne", "phaseTwo", "phaseThree"].forEach((key, index) => setText(key, current.phases[index][0]));
-  ["phaseOneText", "phaseTwoText", "phaseThreeText"].forEach((key, index) => setText(key, current.phases[index][1]));
-  chatActionLabel.textContent = current.assist.chatAction;
-  expertActionLabel.textContent = current.assist.expertAction;
-  conceptButtons.forEach((button) => button.classList.toggle("is-active", button.dataset.concept === activeConcept));
-  renderAssist(assistMode);
-  renderQuestion();
-  renderReport();
+function labels() {
+  return data().labels;
 }
 
 function setText(key, value) {
@@ -184,9 +62,71 @@ function setText(key, value) {
   });
 }
 
+function translate(nextLang) {
+  lang = nextLang;
+  document.documentElement.lang = lang;
+
+  const currentData = data();
+  Object.entries(currentData.common).forEach(([key, value]) => setText(key, value));
+
+  categoryTabs.forEach((tab) => {
+    tab.textContent = currentData.nav[tab.dataset.area];
+  });
+
+  authButtons.forEach((button) => {
+    button.textContent = currentData.auth[button.dataset.auth];
+  });
+
+  chatActionLabel.textContent = currentData.assist.chatAction;
+  expertActionLabel.textContent = currentData.assist.expertAction;
+
+  langButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.lang === lang);
+  });
+
+  renderAll();
+}
+
+function setActiveArea(nextArea, { fromUser = false } = {}) {
+  activeArea = nextArea;
+  answers.area = nextArea;
+
+  if (fromUser) {
+    userHasChosenArea = true;
+    stopAutoCycle();
+  }
+
+  renderAll();
+}
+
+function renderAll() {
+  renderArea();
+  renderQuestion();
+  renderReport();
+  renderAssist();
+}
+
+function renderArea() {
+  const current = area();
+  body.className = `area-${activeArea}`;
+  activeAreaTitle.textContent = current.title;
+  activeAreaCopy.textContent = current.hero;
+
+  categoryTabs.forEach((tab) => {
+    tab.classList.toggle("is-active", tab.dataset.area === activeArea);
+  });
+
+  journeyLabels.forEach((label) => {
+    const labelArea = label.dataset.areaLabel;
+    label.textContent = data().areas[labelArea].journey;
+    label.classList.toggle("is-active", labelArea === activeArea);
+  });
+}
+
 function renderQuestion() {
-  const questions = concept().questions;
+  const questions = data().questions;
   const question = questions[step];
+
   questionLabel.textContent = question.label;
   questionTitle.textContent = question.title;
   stepCurrent.textContent = String(step + 1);
@@ -201,28 +141,37 @@ function renderQuestion() {
     button.className = "option-button";
     button.type = "button";
     button.dataset.value = value;
-    button.innerHTML = `<strong>${label}</strong><span>${helper}</span>`;
-    if (answers[question.key] === value) button.classList.add("is-selected");
+
+    const title = document.createElement("strong");
+    title.textContent = label;
+
+    const copy = document.createElement("span");
+    copy.textContent = helper;
+
+    button.append(title, copy);
+    button.classList.toggle("is-selected", answers[question.key] === value);
     button.addEventListener("click", () => {
       answers[question.key] = value;
+      if (question.key === "area") {
+        setActiveArea(value, { fromUser: true });
+        return;
+      }
       renderQuestion();
       renderReport();
+      renderAssist();
     });
     optionGrid.append(button);
   });
 }
 
 function renderReport() {
-  const current = concept();
-  const styleLabel = findLabel(current.questions[1], answers.style);
-  const moodLabel = findLabel(current.questions[2], answers.mood);
-  const interestLabel = findLabel(current.questions[0], answers.interest);
-
-  reportTitle.textContent = `${styleLabel} ${moodLabel} ${interestLabel}`;
-  summaryText.textContent = current.summaries[answers.interest];
+  const current = area();
+  const currentLabels = labels();
+  reportTitle.textContent = `${currentLabels[answers.style]} ${currentLabels[answers.mood]} ${current.report}`;
+  summaryText.textContent = current.summary;
 
   paletteRow.innerHTML = "";
-  current.palettes[answers.style].forEach((color) => {
+  current.palette.forEach((color) => {
     const swatch = document.createElement("span");
     swatch.className = "swatch";
     swatch.style.background = color;
@@ -230,212 +179,185 @@ function renderReport() {
   });
 
   tagList.innerHTML = "";
-  [styleLabel, moodLabel, ...current.moodTags[answers.mood]].forEach((tag) => {
+  [currentLabels[answers.style], currentLabels[answers.mood], ...current.tags].forEach((tag) => {
     const item = document.createElement("span");
     item.textContent = tag;
     tagList.append(item);
   });
 }
 
-function findLabel(question, value) {
-  return question.options.find((option) => option[0] === value)?.[1] ?? value;
-}
-
-function renderAssist(mode) {
-  if (activeConcept === "concept1" && mode === "chat") {
-    renderConsultHelper();
-    return;
-  }
-
-  if (activeConcept === "concept1" && mode === "expert") {
-    renderExpertHandoff();
-    return;
-  }
-
-  const [eyebrow, title, copy, primary, chips] = concept().assist[mode];
-  assistEyebrow.textContent = eyebrow;
-  assistTitle.textContent = title;
-  assistCopy.textContent = copy;
-  assistPrimary.textContent = primary;
-  assistChips.innerHTML = "";
-  assistSummary.hidden = true;
-  assistSummary.innerHTML = "";
+function renderAssist() {
+  const content = data().assist[assistMode];
+  assistEyebrow.textContent = content.eyebrow;
+  assistTitle.textContent = content.title;
+  assistCopy.textContent = content.copy;
+  assistPrimary.textContent = content.primary;
   assistPrimary.disabled = false;
-  assistPrimary.onclick = null;
-  chips.forEach((chip) => {
+  assistPrimary.onclick = assistMode === "chat" ? startChat : requestExpert;
+
+  assistChips.innerHTML = "";
+  content.chips.forEach((chip) => {
     const item = document.createElement("span");
     item.textContent = chip;
     assistChips.append(item);
   });
-  updateAssistButtonState(mode);
-}
 
-function updateAssistButtonState(mode) {
+  if (assistMode === "chat" && chatStarted) {
+    renderChatStarted();
+  } else if (assistMode === "expert" && expertRequested) {
+    renderExpertRequested();
+  } else {
+    assistSummary.hidden = true;
+    assistSummary.innerHTML = "";
+  }
+
   assistButtons.forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.assist === mode && !assistCard.hidden);
+    button.classList.toggle("is-active", !assistCard.hidden && button.dataset.assist === assistMode);
   });
 }
 
-function currentConsultQuestions() {
-  return consultQuestions[lang] ?? consultQuestions.ko;
+function startChat() {
+  chatStarted = true;
+  renderAssist();
 }
 
-function isConsultComplete() {
-  return currentConsultQuestions().every((question) => consultAnswers[question.key]);
+function requestExpert() {
+  expertRequested = true;
+  renderAssist();
 }
 
-function findConsultLabel(key) {
-  const question = currentConsultQuestions().find((item) => item.key === key);
-  return question?.options.find(([value]) => value === consultAnswers[key])?.[1] ?? consultAnswers[key];
-}
+function renderChatStarted() {
+  const current = area();
+  const currentLabels = labels();
+  const chat = data().chat;
 
-function getQuizSummary() {
-  const current = concept();
-  return {
-    interest: findLabel(current.questions[0], answers.interest),
-    style: findLabel(current.questions[1], answers.style),
-    mood: findLabel(current.questions[2], answers.mood),
+  assistTitle.textContent = chat.startedTitle;
+  assistCopy.textContent = chat.startedCopy;
+  assistPrimary.textContent = chat.send;
+
+  assistSummary.hidden = false;
+  assistSummary.innerHTML = "";
+
+  const thread = document.createElement("div");
+  thread.className = "chat-thread";
+  thread.setAttribute("aria-live", "polite");
+
+  const intro = document.createElement("p");
+  intro.innerHTML = `<strong>AURA</strong> ${chat.intro({
+    areaTitle: current.title,
+    styleLabel: currentLabels[answers.style],
+    moodLabel: currentLabels[answers.mood],
+  })}`;
+  thread.append(intro);
+
+  const label = document.createElement("label");
+  label.className = "chat-composer";
+
+  const labelText = document.createElement("span");
+  labelText.textContent = chat.message;
+
+  const textarea = document.createElement("textarea");
+  textarea.rows = 3;
+  textarea.placeholder = chat.placeholder;
+
+  label.append(labelText, textarea);
+  assistSummary.append(thread, label);
+
+  assistPrimary.onclick = () => {
+    const value = textarea.value.trim();
+    if (!value) {
+      textarea.focus();
+      return;
+    }
+
+    const userMessage = document.createElement("p");
+    userMessage.innerHTML = `<strong>${chat.you}</strong> ${escapeHtml(value)}`;
+
+    const auraMessage = document.createElement("p");
+    auraMessage.innerHTML = `<strong>AURA</strong> ${chat.reply({
+      areaTitle: current.title,
+      tag: current.tags[0],
+    })}`;
+
+    thread.append(userMessage, auraMessage);
+    textarea.value = "";
+    textarea.focus();
   };
 }
 
-function buildConsultSummary() {
-  const quiz = getQuizSummary();
-  if (lang === "en") {
-    return [
-      ["AI report", `${quiz.style} ${quiz.mood} ${quiz.interest}`],
-      ["Goal", findConsultLabel("occasion")],
-      ["Concern", findConsultLabel("concern")],
-      ["Wanted result", findConsultLabel("finish")],
-      ["Request", "Start with base makeup, color palette, and daily product direction."],
-    ];
-  }
+function renderExpertRequested() {
+  const current = area();
+  const expert = data().expert;
 
-  return [
-    ["AI 리포트", `${quiz.style} ${quiz.mood} ${quiz.interest}`],
-    ["상담 목적", findConsultLabel("occasion")],
-    ["핵심 고민", findConsultLabel("concern")],
-    ["원하는 결과", findConsultLabel("finish")],
-    ["요청 방향", "피부 표현, 컬러 팔레트, 데일리 제품 방향을 먼저 상담"],
-  ];
-}
+  assistTitle.textContent = expert.readyTitle;
+  assistCopy.textContent = expert.readyCopy;
+  assistPrimary.textContent = expert.readyButton;
+  assistPrimary.disabled = true;
 
-function renderSummaryRows(rows) {
+  assistSummary.hidden = false;
   assistSummary.innerHTML = "";
-  rows.forEach(([label, value]) => {
+
+  [
+    [expert.section, current.title],
+    [expert.report, reportTitle.textContent],
+  ].forEach(([label, value]) => {
     const row = document.createElement("div");
     row.className = "assist-summary-row";
 
-    const term = document.createElement("strong");
-    term.textContent = label;
+    const key = document.createElement("strong");
+    key.textContent = label;
 
-    const description = document.createElement("span");
-    description.textContent = value;
+    const text = document.createElement("span");
+    text.textContent = value;
 
-    row.append(term, description);
+    row.append(key, text);
     assistSummary.append(row);
   });
 }
 
-function renderConsultHelper() {
-  const questions = currentConsultQuestions();
-  const question = questions[consultStep];
-  const complete = isConsultComplete();
+function escapeHtml(value) {
+  const element = document.createElement("span");
+  element.textContent = value;
+  return element.innerHTML;
+}
 
-  assistEyebrow.textContent = lang === "en" ? "Pre-Consult Helper" : "상담 전 정리 도우미";
-  assistTitle.textContent = complete ? (lang === "en" ? "Consult Summary" : "전문가 전달 요약") : question.title;
-  assistCopy.textContent = complete
-    ? (lang === "en" ? "This summary combines your AI report with the consultation brief." : "AI 리포트와 상담 목적을 합쳐 전문가에게 전달할 핵심 내용을 정리했어요.")
-    : (lang === "en" ? "Answer three quick prompts before meeting an expert." : "전문가 상담 전에 목적, 고민, 원하는 결과를 3단계로 정리합니다.");
+function startAutoCycle() {
+  stopAutoCycle();
+  autoCycleId = window.setInterval(() => {
+    if (userHasChosenArea) {
+      stopAutoCycle();
+      return;
+    }
 
-  assistChips.innerHTML = "";
-  assistSummary.hidden = !complete;
-  assistSummary.innerHTML = "";
-  assistPrimary.disabled = false;
+    const currentIndex = areaOrder.indexOf(activeArea);
+    const nextArea = areaOrder[(currentIndex + 1) % areaOrder.length];
+    setActiveArea(nextArea);
+  }, 2800);
+}
 
-  if (complete) {
-    renderSummaryRows(buildConsultSummary());
-    buildConsultSummary().slice(1, 4).forEach(([, value]) => {
-      const item = document.createElement("span");
-      item.textContent = value;
-      assistChips.append(item);
-    });
-    assistPrimary.textContent = lang === "en" ? "Send to expert" : "전문가에게 전달하기";
-    assistPrimary.onclick = () => {
-      assistMode = "expert";
-      renderAssist("expert");
-    };
-    updateAssistButtonState("chat");
-    return;
-  }
+function stopAutoCycle() {
+  if (!autoCycleId) return;
+  window.clearInterval(autoCycleId);
+  autoCycleId = null;
+}
 
-  const selected = consultAnswers[question.key];
-  assistChips.dataset.step = question.label;
-  question.options.forEach(([value, label]) => {
-    const button = document.createElement("button");
-    button.className = "assist-chip-button";
-    button.type = "button";
-    button.textContent = label;
-    button.classList.toggle("is-selected", selected === value);
-    button.addEventListener("click", () => {
-      consultAnswers[question.key] = value;
-      renderConsultHelper();
-    });
-    assistChips.append(button);
+categoryTabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    setActiveArea(tab.dataset.area, { fromUser: true });
   });
+});
 
-  assistPrimary.textContent = consultStep === questions.length - 1
-    ? (lang === "en" ? "Make summary" : "요약 만들기")
-    : (lang === "en" ? "Next" : "다음");
-  assistPrimary.disabled = !selected;
-  assistPrimary.onclick = () => {
-    if (!consultAnswers[question.key]) return;
-    consultStep = Math.min(questions.length - 1, consultStep + 1);
-    renderConsultHelper();
-  };
-  updateAssistButtonState("chat");
-}
+langButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    translate(button.dataset.lang);
+  });
+});
 
-function renderExpertHandoff() {
-  const complete = isConsultComplete();
-  assistEyebrow.textContent = lang === "en" ? "AURA Expert" : "전문가 상담";
-  assistChips.innerHTML = "";
-  assistSummary.hidden = !complete;
-  assistSummary.innerHTML = "";
-  assistPrimary.disabled = false;
-
-  if (!complete) {
-    assistTitle.textContent = lang === "en" ? "Summary needed first" : "상담 요약이 먼저 필요해요";
-    assistCopy.textContent = lang === "en"
-      ? "Complete the three-step helper so the expert receives a clear brief."
-      : "챗에서 3단계 정리를 완료하면 전문가에게 보낼 요약이 자동으로 만들어집니다.";
-    const item = document.createElement("span");
-    item.textContent = lang === "en" ? "3-step brief" : "3단계 정리";
-    assistChips.append(item);
-    assistPrimary.textContent = lang === "en" ? "Open helper" : "정리 도우미 열기";
-    assistPrimary.onclick = () => {
-      assistMode = "chat";
-      renderAssist("chat");
-    };
-    updateAssistButtonState("expert");
-    return;
-  }
-
-  assistTitle.textContent = expertRequested
-    ? (lang === "en" ? "Request draft ready" : "상담 요청 초안 준비 완료")
-    : (lang === "en" ? "Ready for handoff" : "전문가 전달 준비 완료");
-  assistCopy.textContent = expertRequested
-    ? (lang === "en" ? "The expert can start from this brief." : "전문가는 아래 요약을 기준으로 바로 상담을 시작할 수 있어요.")
-    : (lang === "en" ? "Use this brief as the starting point for a 1:1 makeup consultation." : "아래 요약을 기준으로 1:1 메이크업 상담을 요청합니다.");
-  renderSummaryRows(buildConsultSummary());
-  assistPrimary.textContent = expertRequested
-    ? (lang === "en" ? "Ready" : "요청 준비 완료")
-    : (lang === "en" ? "Request 1:1 consult" : "1:1 상담 요청");
-  assistPrimary.onclick = () => {
-    expertRequested = true;
-    renderExpertHandoff();
-  };
-  updateAssistButtonState("expert");
-}
+authButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    authButtons.forEach((item) => item.classList.toggle("is-active", item === button));
+  });
+});
 
 prevButton.addEventListener("click", () => {
   step = Math.max(0, step - 1);
@@ -443,27 +365,12 @@ prevButton.addEventListener("click", () => {
 });
 
 nextButton.addEventListener("click", () => {
-  if (step < concept().questions.length - 1) {
+  if (step < data().questions.length - 1) {
     step += 1;
     renderQuestion();
     return;
   }
   document.querySelector(".report-panel").scrollIntoView({ behavior: "smooth", block: "center" });
-});
-
-document.querySelectorAll(".lang-button").forEach((button) => {
-  button.addEventListener("click", () => {
-    lang = button.dataset.lang;
-    document.querySelectorAll(".lang-button").forEach((item) => item.classList.toggle("is-active", item === button));
-    translate();
-  });
-});
-
-conceptButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    activeConcept = button.dataset.concept;
-    applyConcept(true);
-  });
 });
 
 assistButtons.forEach((button) => {
@@ -472,14 +379,14 @@ assistButtons.forEach((button) => {
     const shouldClose = !assistCard.hidden && assistMode === selectedMode;
     assistMode = selectedMode;
     assistCard.hidden = shouldClose;
-    renderAssist(assistMode);
+    renderAssist();
   });
 });
 
 assistClose.addEventListener("click", () => {
   assistCard.hidden = true;
-  renderAssist(assistMode);
+  renderAssist();
 });
 
-resetAnswers();
-translate();
+translate("ko");
+startAutoCycle();

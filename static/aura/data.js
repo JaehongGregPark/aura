@@ -1,458 +1,306 @@
 const portfolioData = {
   ko: {
-    conceptUi: {
-      eyebrow: "PORTFOLIO OPTIONS",
-      title: "첫 화면 콘셉트를 선택하세요.",
-      lead: "먼저 1안의 메이크업 중심 AURA를 기준으로 취향 분석과 상담 흐름을 완성하고, 이후 2안과 3안으로 확장합니다.",
-      options: [
-        ["concept1", "1안", "메이크업 중심 AURA"],
-        ["concept2", "2안", "패션 에디토리얼 아틀리에"],
-        ["concept3", "3안", "리빙 웰니스 포트폴리오"]
-      ]
+    nav: {
+      makeup: "메이크업",
+      hair: "헤어",
+      fashion: "패션",
+      interior: "인테리어",
+    },
+    auth: {
+      login: "로그인",
+      guest: "게스트",
     },
     common: {
+      eyebrow: "AI 토탈 스타일 큐레이션",
+      title: "메이크업에서 시작해 나에게 맞는 라이프스타일까지.",
+      lead: "AURA가 메이크업, 헤어, 패션, 인테리어를 하나의 취향 흐름으로 연결합니다.",
+      sectionKicker: "지금 보고 있는 섹션",
+      quizEyebrow: "온보딩 퀴즈",
+      quizTitle: "취향 분석",
+      reportEyebrow: "AI 스타일 리포트",
+      summaryTitle: "AI Style Summary",
+      ready: "실시간 생성",
       prev: "이전",
       next: "다음",
       finish: "리포트 보기",
-      ready: "실시간 생성"
+      phaseOne: "Phase 1",
+      phaseOneText: "메이크업 취향 분석과 AI 리포트",
+      phaseTwo: "Phase 2",
+      phaseTwoText: "전문가 상담과 1:1 매칭",
+      phaseThree: "Phase 3",
+      phaseThreeText: "헤어, 패션, 인테리어까지 확장",
     },
-    concepts: {
-      concept1: {
-        brand: "AURA",
-        eyebrow: "AI 메이크업 퍼스트 큐레이션",
-        title: "메이크업부터 분석하고, 어울리는 스타일을 확장합니다.",
-        lead: "피부 표현, 컬러 팔레트, 분위기를 먼저 정리한 뒤 헤어, 패션, 인테리어까지 자연스럽게 연결합니다.",
-        journey: ["Makeup", "Hair", "Fashion", "Interior"],
-        quizEyebrow: "온보딩 퀴즈",
-        quizTitle: "메이크업 취향 분석",
-        reportEyebrow: "AI 메이크업 리포트",
-        summaryTitle: "AI Style Summary",
-        phases: [
-          ["Phase 1", "메이크업 취향 분석, AI 리포트, 기본 큐레이션 UI"],
-          ["Phase 2", "메이크업 전문가 상담과 1:1 매칭"],
-          ["Phase 3", "메이크업 키트, 헤어/패션 연동 커머스"]
-        ],
-        questions: [
-          {
-            label: "STEP 1",
-            title: "가장 먼저 큐레이션 받고 싶은 관심사는?",
-            key: "interest",
-            options: [
-              ["makeup", "메이크업", "톤, 광채, 컬러 조합"],
-              ["hair", "헤어", "스타일과 컬러 밸런스"],
-              ["fashion", "패션", "실루엣과 데일리 룩"],
-              ["interior", "인테리어", "공간 무드 확장"]
-            ]
-          },
-          {
-            label: "STEP 2",
-            title: "선호하는 스타일 방향은?",
-            key: "style",
-            options: [
-              ["minimal", "미니멀", "깨끗하고 정돈된 인상"],
-              ["romantic", "로맨틱", "부드럽고 사랑스러운 결"],
-              ["modern", "모던", "선명하고 세련된 균형"],
-              ["vintage", "빈티지", "클래식한 질감과 색감"]
-            ]
-          },
-          {
-            label: "STEP 3",
-            title: "오늘 만들고 싶은 분위기는?",
-            key: "mood",
-            options: [
-              ["calm", "차분한", "은은한 톤과 안정감"],
-              ["glam", "화려한", "반짝이는 포인트"],
-              ["natural", "내추럴", "피부결 중심의 자연스러움"],
-              ["urban", "도시적인", "차가운 선과 또렷한 대비"]
-            ]
-          }
-        ],
-        defaults: { interest: "makeup", style: "romantic", mood: "calm" },
-        summaries: {
-          makeup: "메이크업을 중심축으로 팔레트, 헤어 톤, 패션 컬러, 공간 무드까지 하나의 취향으로 연결합니다.",
-          hair: "헤어 컬러와 질감을 기준으로 메이크업 톤을 조정하고 패션 실루엣까지 자연스럽게 이어갑니다.",
-          fashion: "패션의 선과 소재감을 기준으로 메이크업 포인트와 헤어 연출을 균형 있게 추천합니다.",
-          interior: "공간 취향에서 출발해 매일의 메이크업과 스타일링에 어울리는 컬러 감도를 제안합니다."
-        },
-        palettes: {
-          minimal: ["#fff7fa", "#f1dfe8", "#dfd8f5", "#c9c4ea", "#9c93bd"],
-          romantic: ["#fff0f5", "#f7bdd1", "#dfa8d8", "#ddd7fb", "#beb3e4"],
-          modern: ["#fbf7f8", "#d7d3dc", "#b9acd9", "#8d7faa", "#4f4558"],
-          vintage: ["#fff1ec", "#e8c4c9", "#c9a5bd", "#b8b1d6", "#766d85"]
-        },
-        moodTags: {
-          calm: ["Soft", "Balanced", "Lavender Veil"],
-          glam: ["Glowing", "Defined", "Pearl Point"],
-          natural: ["Fresh", "Skin-first", "Airy Pink"],
-          urban: ["Chic", "Clean Line", "Cool Contrast"]
-        },
-        assist: {
-          chatAction: "챗",
-          expertAction: "전문가",
-          chat: ["AURA Chat", "취향 챗 상담", "선택한 취향을 바탕으로 메이크업 톤, 헤어 컬러, 데일리 룩 질문을 가볍게 이어갈 수 있어요.", "챗 시작", ["톤 추천", "제품 질문", "룩 조합"]],
-          expert: ["AURA Expert", "전문가 상담", "AI 리포트를 전문가에게 전달해 메이크업 중심의 1:1 스타일 상담으로 이어갈 수 있어요.", "상담 요청", ["메이크업", "헤어", "패션 매칭"]]
-        }
+    areas: {
+      makeup: {
+        title: "메이크업",
+        journey: "Makeup",
+        hero: "피부 표현, 색조, 분위기를 먼저 분석해 전체 스타일의 기준을 잡습니다.",
+        report: "Soft Glow Makeup",
+        summary: "은은한 피부 표현과 장밋빛 컬러를 중심으로 헤어 톤, 데일리 룩, 공간 무드까지 자연스럽게 이어지는 스타일을 제안합니다.",
+        tags: ["Skin-first", "Rose Glow", "Soft Balance"],
+        palette: ["#fff7fa", "#f8ccd9", "#dfb0cf", "#c6bddf", "#76698a"],
       },
-      concept2: {
-        brand: "NOIR ATELIER",
-        eyebrow: "AI 패션 에디토리얼 포트폴리오",
-        title: "한 사람의 실루엣을 하나의 캠페인처럼 설계합니다.",
-        lead: "브랜드 아이덴티티, 룩북, 소재감, 촬영 무드를 조합해 개인 혹은 브랜드의 패션 포트폴리오를 에디토리얼 톤으로 구성합니다.",
-        journey: ["Identity", "Lookbook", "Wardrobe", "Campaign"],
-        quizEyebrow: "디렉션 보드",
-        quizTitle: "에디토리얼 설계",
-        reportEyebrow: "Campaign Direction",
-        summaryTitle: "Editorial Summary",
-        phases: [
-          ["Chapter 1", "시그니처 실루엣과 룩북 무드보드 구성"],
-          ["Chapter 2", "촬영 콘셉트, 스타일링 컷, 포트폴리오 페이지 확장"],
-          ["Chapter 3", "브랜드 협업 제안서와 캠페인 패키지 구성"]
-        ],
-        questions: [
-          {
-            label: "BOARD 1",
-            title: "이번 포트폴리오의 중심 결과물은?",
-            key: "interest",
-            options: [
-              ["identity", "브랜드 아이덴티티", "로고 없이도 기억되는 인상"],
-              ["lookbook", "룩북", "착장과 포즈 중심의 시퀀스"],
-              ["runway", "런웨이 무드", "움직임과 구조감"],
-              ["campaign", "디지털 캠페인", "SNS와 웹 비주얼 확장"]
-            ]
-          },
-          {
-            label: "BOARD 2",
-            title: "가장 강하게 가져갈 스타일 언어는?",
-            key: "style",
-            options: [
-              ["tailored", "테일러드", "정제된 재킷과 선"],
-              ["sculptural", "스컬프처럴", "조형적인 볼륨"],
-              ["street", "스트리트", "레이어와 텍스처"],
-              ["luxury", "럭셔리", "광택과 밀도 있는 소재"]
-            ]
-          },
-          {
-            label: "BOARD 3",
-            title: "촬영의 감정 온도는?",
-            key: "mood",
-            options: [
-              ["sharp", "샤프한", "명확한 대비"],
-              ["velvet", "벨벳 같은", "깊고 부드러운 그림자"],
-              ["metallic", "메탈릭", "차가운 반사광"],
-              ["afterdark", "애프터다크", "밤의 네온과 긴장감"]
-            ]
-          }
-        ],
-        defaults: { interest: "lookbook", style: "tailored", mood: "velvet" },
-        summaries: {
-          identity: "브랜드의 핵심 인상을 실루엣, 타이포그래피, 컷 구성으로 압축해 오래 남는 포트폴리오 첫 장을 만듭니다.",
-          lookbook: "착장별 리듬과 화면 간 긴장감을 설계해 하나의 에디토리얼 시퀀스로 읽히게 합니다.",
-          runway: "움직임이 있는 라인과 구조감을 중심으로 런웨이형 프레젠테이션에 가까운 흐름을 추천합니다.",
-          campaign: "짧은 카피, 강한 썸네일, 반복 가능한 비주얼 규칙으로 디지털 캠페인 확장성을 만듭니다."
-        },
-        palettes: {
-          tailored: ["#fffaf4", "#d8c6bb", "#8f1f36", "#3a2723", "#171518"],
-          sculptural: ["#f5efe7", "#c8b26a", "#b99a8a", "#7a1730", "#282428"],
-          street: ["#f8f1ea", "#a7a099", "#7e2433", "#35333a", "#09090b"],
-          luxury: ["#fff7e8", "#d4b76a", "#9b263f", "#5a3c30", "#1d1818"]
-        },
-        moodTags: {
-          sharp: ["High Contrast", "Clean Cut", "Chrome Line"],
-          velvet: ["Deep Shadow", "Soft Grain", "Quiet Luxury"],
-          metallic: ["Cold Flash", "Mirror Edge", "Tech Noir"],
-          afterdark: ["Night Signal", "Low Light", "Bold Tension"]
-        },
-        assist: {
-          chatAction: "디렉터",
-          expertAction: "스타일리스트",
-          chat: ["NOIR Director", "무드보드 챗", "룩북 컷 순서, 소재 조합, 캠페인 카피를 빠르게 점검합니다.", "보드 점검", ["룩북", "촬영", "카피"]],
-          expert: ["NOIR Stylist", "스타일리스트 상담", "선택한 포트폴리오 방향을 기반으로 착장 구성과 촬영 콘셉트 상담을 연결합니다.", "상담 요청", ["착장", "포즈", "캠페인"]]
-        }
+      hair: {
+        title: "헤어",
+        journey: "Hair",
+        hero: "얼굴형과 피부 톤에 맞는 컬러, 길이, 질감을 찾아 메이크업과 균형을 맞춥니다.",
+        report: "Airy Hair Balance",
+        summary: "부드러운 레이어와 차분한 브라운 톤을 기준으로 얼굴 주변의 빛과 인상을 정돈하는 헤어 방향을 추천합니다.",
+        tags: ["Layer", "Tone Match", "Face Line"],
+        palette: ["#fff3eb", "#edc5b2", "#bd8f7a", "#8e6257", "#443239"],
       },
-      concept3: {
-        brand: "VERDE HOUSE",
-        eyebrow: "AI 리빙 웰니스 포트폴리오",
-        title: "공간, 향, 소리, 루틴이 만나는 조용한 라이프 아카이브.",
-        lead: "집의 장면과 일상의 리듬을 분석해 리빙 스타일, 웰니스 루틴, 감각 큐레이션을 하나의 포트폴리오로 정리합니다.",
-        journey: ["Space", "Scent", "Sound", "Ritual"],
-        quizEyebrow: "라이프 리듬 체크",
-        quizTitle: "공간 취향 설계",
-        reportEyebrow: "Living Wellness Report",
-        summaryTitle: "Ritual Summary",
-        phases: [
-          ["Season 1", "공간 톤, 조명, 오브제 큐레이션"],
-          ["Season 2", "향, 음악, 루틴 기반 웰니스 플랜"],
-          ["Season 3", "홈 스타일링 키트와 클래스형 커머스 확장"]
-        ],
-        questions: [
-          {
-            label: "RITUAL 1",
-            title: "가장 먼저 바꾸고 싶은 생활 장면은?",
-            key: "interest",
-            options: [
-              ["home", "홈 스타일링", "방의 첫인상과 동선"],
-              ["wellness", "웰니스 루틴", "수면과 회복의 리듬"],
-              ["plant", "플랜테리어", "식물과 자연광"],
-              ["table", "테이블 무드", "식사와 초대의 장면"]
-            ]
-          },
-          {
-            label: "RITUAL 2",
-            title: "공간에 어울리는 스타일은?",
-            key: "style",
-            options: [
-              ["organic", "오가닉", "곡선과 자연 소재"],
-              ["japanese", "재패니즈", "여백과 낮은 가구"],
-              ["nordic", "노르딕", "밝은 목재와 실용성"],
-              ["artisan", "아티잔", "손맛 있는 오브제"]
-            ]
-          },
-          {
-            label: "RITUAL 3",
-            title: "공간에 남기고 싶은 기분은?",
-            key: "mood",
-            options: [
-              ["fresh", "신선한", "맑은 공기감"],
-              ["grounded", "차분히 머무는", "낮은 톤과 안정감"],
-              ["sunlit", "햇살 같은", "따뜻한 오후의 질감"],
-              ["quiet", "고요한", "소리와 빛을 덜어낸 상태"]
-            ]
-          }
-        ],
-        defaults: { interest: "home", style: "organic", mood: "sunlit" },
-        summaries: {
-          home: "입구에서 머무는 자리까지 동선을 정리하고, 조명과 오브제로 일상의 첫인상을 부드럽게 만듭니다.",
-          wellness: "수면 전후의 루틴, 향, 소리, 조도를 연결해 회복감을 주는 생활 포트폴리오로 구성합니다.",
-          plant: "식물의 높이와 빛의 방향을 기준으로 공간에 생동감을 주는 플랜테리어 균형을 제안합니다.",
-          table: "식기, 패브릭, 조명의 온도를 맞춰 매일의 식탁과 초대의 장면이 자연스럽게 이어지게 합니다."
-        },
-        palettes: {
-          organic: ["#fbfff8", "#dcebdc", "#a8c7ad", "#5b8a73", "#26352d"],
-          japanese: ["#fffaf0", "#e6dac9", "#b8c5ad", "#6f806d", "#30382f"],
-          nordic: ["#f8fbf2", "#e5ecd8", "#c8d9d0", "#85a998", "#405f51"],
-          artisan: ["#fff8ea", "#e7c4a4", "#d49b82", "#8b6d4f", "#354538"]
-        },
-        moodTags: {
-          fresh: ["Airy", "Green Note", "Clean Light"],
-          grounded: ["Low Tone", "Slow Pace", "Warm Wood"],
-          sunlit: ["Afternoon", "Soft Linen", "Honey Light"],
-          quiet: ["Stillness", "Muted Sound", "Restful Space"]
-        },
-        assist: {
-          chatAction: "루틴",
-          expertAction: "공간 상담",
-          chat: ["VERDE Guide", "루틴 챗", "공간, 향, 조명, 수면 루틴을 가볍게 조합해 봅니다.", "루틴 만들기", ["향", "조명", "수면"]],
-          expert: ["VERDE Stylist", "공간 상담", "선택한 라이프 리포트를 바탕으로 홈 스타일링과 웰니스 루틴 상담을 연결합니다.", "상담 요청", ["공간", "식물", "테이블"]]
-        }
-      }
-    }
-  },
-  en: {
-    conceptUi: {
-      eyebrow: "PORTFOLIO OPTIONS",
-      title: "Choose the first-screen concept.",
-      lead: "Start with Option 1, the makeup-first AURA flow. Options 2 and 3 remain ready as later portfolio expansions.",
-      options: [
-        ["concept1", "Option 1", "Makeup-first AURA"],
-        ["concept2", "Option 2", "Fashion editorial atelier"],
-        ["concept3", "Option 3", "Living wellness portfolio"]
-      ]
+      fashion: {
+        title: "패션",
+        journey: "Fashion",
+        hero: "실루엣, 소재, 컬러 조합을 읽어 매일 입기 좋은 스타일 언어로 확장합니다.",
+        report: "Quiet Daily Look",
+        summary: "정돈된 실루엣과 포인트 컬러를 섞어 메이크업과 헤어가 따로 보이지 않는 데일리 스타일을 구성합니다.",
+        tags: ["Clean Line", "Daily Fit", "Color Point"],
+        palette: ["#fbf7f1", "#d9d1c7", "#9a8f88", "#6d5967", "#302a35"],
+      },
+      interior: {
+        title: "인테리어",
+        journey: "Interior",
+        hero: "개인의 분위기를 공간의 빛, 오브제, 향으로 번역해 오래 머무는 취향을 만듭니다.",
+        report: "Calm Living Mood",
+        summary: "차분한 조명과 자연 소재를 중심으로 스타일 리포트가 생활 공간에서도 이어지도록 컬러와 오브제 방향을 잡습니다.",
+        tags: ["Warm Light", "Object", "Slow Mood"],
+        palette: ["#fbfff8", "#dcebdc", "#a8c7ad", "#6e927a", "#29382f"],
+      },
     },
-    common: {
-      prev: "Back",
-      next: "Next",
-      finish: "View report",
-      ready: "Live report"
-    },
-    concepts: {}
-  }
-};
-
-portfolioData.en.concepts = {
-  concept1: {
-    ...portfolioData.ko.concepts.concept1,
-    eyebrow: "AI makeup-first curation",
-    title: "Analyze makeup first, then expand into a connected style.",
-    lead: "Start with skin finish, color palette, and mood, then connect the result into hair, fashion, and interiors.",
-    quizEyebrow: "Onboarding quiz",
-    quizTitle: "Makeup taste analysis",
-    reportEyebrow: "AI makeup report",
-    summaryTitle: "AI Style Summary",
-    phases: [
-      ["Phase 1", "Makeup taste engine, AI report, core curation UI"],
-      ["Phase 2", "Makeup expert consultation and 1:1 matching"],
-      ["Phase 3", "Makeup kits with hair/fashion commerce"]
-    ],
     questions: [
       {
         label: "STEP 1",
-        title: "Which area should AURA curate first?",
-        key: "interest",
+        title: "가장 먼저 보고 싶은 섹션은 무엇인가요?",
+        key: "area",
         options: [
-          ["makeup", "Makeup", "Glow, base, and color matching"],
-          ["hair", "Hair", "Cut, tone, and color balance"],
-          ["fashion", "Fashion", "Silhouette and daily looks"],
-          ["interior", "Interior", "Extend the mood into your space"]
-        ]
+          ["makeup", "메이크업", "피부 표현과 색조부터 시작"],
+          ["hair", "헤어", "컬러와 실루엣 균형"],
+          ["fashion", "패션", "데일리 룩과 소재감"],
+          ["interior", "인테리어", "공간 무드와 오브제"],
+        ],
+      },
+      {
+        label: "STEP 2",
+        title: "가장 가까운 스타일 방향은?",
+        key: "style",
+        options: [
+          ["minimal", "미니멀", "맑고 정돈된 인상"],
+          ["romantic", "로맨틱", "부드럽고 사랑스러운 결"],
+          ["modern", "모던", "선명하고 세련된 균형"],
+          ["natural", "내추럴", "편안하고 자연스러운 흐름"],
+        ],
+      },
+      {
+        label: "STEP 3",
+        title: "오늘 만들고 싶은 분위기는?",
+        key: "mood",
+        options: [
+          ["calm", "차분함", "낮은 채도와 안정감"],
+          ["glow", "화사함", "밝은 빛과 생기"],
+          ["chic", "시크함", "간결한 선과 대비"],
+          ["warm", "따뜻함", "부드러운 온도감"],
+        ],
+      },
+    ],
+    labels: {
+      minimal: "미니멀",
+      romantic: "로맨틱",
+      modern: "모던",
+      natural: "내추럴",
+      calm: "차분함",
+      glow: "화사함",
+      chic: "시크함",
+      warm: "따뜻함",
+    },
+    assist: {
+      chatAction: "채팅",
+      expertAction: "전문가",
+      chat: {
+        eyebrow: "AURA Chat",
+        title: "취향 상담",
+        copy: "선택한 섹션과 리포트를 바탕으로 메이크업, 헤어, 패션, 인테리어 질문을 이어갈 수 있어요.",
+        primary: "채팅 시작",
+        chips: ["톤 매칭", "제품 추천", "룩 조합", "공간 무드"],
+      },
+      expert: {
+        eyebrow: "AURA Expert",
+        title: "전문가 상담",
+        copy: "AI 리포트를 전문가에게 전달해 1:1 스타일 상담으로 이어가는 흐름입니다.",
+        primary: "상담 요청",
+        chips: ["메이크업", "헤어", "패션", "인테리어"],
+      },
+    },
+    chat: {
+      startedTitle: "AURA 채팅 시작",
+      startedCopy: "현재 스타일 리포트를 바탕으로 채팅 준비가 완료됐어요.",
+      send: "메시지 보내기",
+      message: "메시지",
+      placeholder: "톤, 제품, 헤어, 룩, 공간 무드에 대해 물어보세요.",
+      intro: ({ areaTitle, styleLabel, moodLabel }) =>
+        `${areaTitle} 섹션과 ${styleLabel} ${moodLabel} 무드를 기준으로 상담을 시작할게요.`,
+      you: "나",
+      reply: ({ areaTitle, tag }) =>
+        `좋아요. ${areaTitle}에서는 ${tag} 방향부터 보고, 지금 팔레트와 자연스럽게 연결해볼게요.`,
+    },
+    expert: {
+      readyTitle: "상담 요청 준비 완료",
+      readyCopy: "현재 리포트를 전문가에게 전달할 준비가 됐어요.",
+      readyButton: "요청 준비 완료",
+      section: "섹션",
+      report: "리포트",
+    },
+  },
+  en: {
+    nav: {
+      makeup: "Makeup",
+      hair: "Hair",
+      fashion: "Fashion",
+      interior: "Interior",
+    },
+    auth: {
+      login: "Log in",
+      guest: "Guest",
+    },
+    common: {
+      eyebrow: "AI total style curation",
+      title: "Start with makeup, then expand into your lifestyle.",
+      lead: "AURA connects makeup, hair, fashion, and interiors into one taste flow.",
+      sectionKicker: "Current section",
+      quizEyebrow: "Onboarding quiz",
+      quizTitle: "Taste analysis",
+      reportEyebrow: "AI style report",
+      summaryTitle: "AI Style Summary",
+      ready: "Live report",
+      prev: "Back",
+      next: "Next",
+      finish: "View report",
+      phaseOne: "Phase 1",
+      phaseOneText: "Makeup taste analysis and AI report",
+      phaseTwo: "Phase 2",
+      phaseTwoText: "Expert consultation and 1:1 matching",
+      phaseThree: "Phase 3",
+      phaseThreeText: "Expansion into hair, fashion, and interiors",
+    },
+    areas: {
+      makeup: {
+        title: "Makeup",
+        journey: "Makeup",
+        hero: "Analyze skin finish, color, and mood first to set the anchor for the full style.",
+        report: "Soft Glow Makeup",
+        summary: "A soft skin finish and rosy palette become the base for connected hair tone, daily outfits, and living mood.",
+        tags: ["Skin-first", "Rose Glow", "Soft Balance"],
+        palette: ["#fff7fa", "#f8ccd9", "#dfb0cf", "#c6bddf", "#76698a"],
+      },
+      hair: {
+        title: "Hair",
+        journey: "Hair",
+        hero: "Find color, length, and texture that balance your face shape, skin tone, and makeup.",
+        report: "Airy Hair Balance",
+        summary: "Soft layers and calm brown tones refine the light around the face and keep the overall impression balanced.",
+        tags: ["Layer", "Tone Match", "Face Line"],
+        palette: ["#fff3eb", "#edc5b2", "#bd8f7a", "#8e6257", "#443239"],
+      },
+      fashion: {
+        title: "Fashion",
+        journey: "Fashion",
+        hero: "Read silhouette, material, and color pairings as a practical daily style language.",
+        report: "Quiet Daily Look",
+        summary: "Clean silhouettes and measured color points build daily looks that sit naturally with makeup and hair.",
+        tags: ["Clean Line", "Daily Fit", "Color Point"],
+        palette: ["#fbf7f1", "#d9d1c7", "#9a8f88", "#6d5967", "#302a35"],
+      },
+      interior: {
+        title: "Interior",
+        journey: "Interior",
+        hero: "Translate personal mood into light, objects, scent, and a space you want to stay in.",
+        report: "Calm Living Mood",
+        summary: "Soft lighting and natural materials carry the style report into the room through color and object direction.",
+        tags: ["Warm Light", "Object", "Slow Mood"],
+        palette: ["#fbfff8", "#dcebdc", "#a8c7ad", "#6e927a", "#29382f"],
+      },
+    },
+    questions: [
+      {
+        label: "STEP 1",
+        title: "Which section should AURA show first?",
+        key: "area",
+        options: [
+          ["makeup", "Makeup", "Skin finish and color"],
+          ["hair", "Hair", "Color and silhouette"],
+          ["fashion", "Fashion", "Daily looks and texture"],
+          ["interior", "Interior", "Space mood and objects"],
+        ],
       },
       {
         label: "STEP 2",
         title: "Which style direction feels closest?",
         key: "style",
         options: [
-          ["minimal", "Minimal", "Clean and refined impression"],
-          ["romantic", "Romantic", "Soft and lovely details"],
-          ["modern", "Modern", "Clear, polished balance"],
-          ["vintage", "Vintage", "Classic texture and color"]
-        ]
+          ["minimal", "Minimal", "Clean and refined"],
+          ["romantic", "Romantic", "Soft and lovely"],
+          ["modern", "Modern", "Clear and polished"],
+          ["natural", "Natural", "Easy and effortless"],
+        ],
       },
       {
         label: "STEP 3",
         title: "What mood do you want today?",
         key: "mood",
         options: [
-          ["calm", "Calm", "Stable and gentle tone"],
-          ["glam", "Glam", "Sparkling point and definition"],
-          ["natural", "Natural", "Skin-first and effortless"],
-          ["urban", "Urban", "Chic contrast and sharpness"]
-        ]
-      }
+          ["calm", "Calm", "Low tone and stable"],
+          ["glow", "Glow", "Bright and lively"],
+          ["chic", "Chic", "Clean contrast"],
+          ["warm", "Warm", "Soft temperature"],
+        ],
+      },
     ],
-    summaries: {
-      makeup: "Start with makeup as the anchor, then connect palette, hair tone, fashion colors, and space mood into one coherent taste profile.",
-      hair: "Use hair color and texture as the base, then tune makeup tone and wardrobe direction around it.",
-      fashion: "Use silhouette and material taste as the base, then balance makeup points and hair styling around the look.",
-      interior: "Start from spatial taste and translate it into makeup colors and styling moods that feel naturally connected."
+    labels: {
+      minimal: "Minimal",
+      romantic: "Romantic",
+      modern: "Modern",
+      natural: "Natural",
+      calm: "Calm",
+      glow: "Glow",
+      chic: "Chic",
+      warm: "Warm",
     },
     assist: {
       chatAction: "Chat",
       expertAction: "Expert",
-      chat: ["AURA Chat", "Taste chat", "Continue with quick questions about makeup tone, hair color, and daily looks based on your selected profile.", "Start chat", ["Tone match", "Product Q&A", "Look pairing"]],
-      expert: ["AURA Expert", "Expert consultation", "Send your AI report into a 1:1 consultation flow centered on makeup and connected styling.", "Request consult", ["Makeup", "Hair", "Fashion match"]]
-    }
-  },
-  concept2: {
-    ...portfolioData.ko.concepts.concept2,
-    eyebrow: "AI fashion editorial portfolio",
-    title: "Design one silhouette like a complete campaign.",
-    lead: "Combine identity, lookbook, material language, and shoot mood into an editorial portfolio for a person or brand.",
-    quizEyebrow: "Direction board",
-    quizTitle: "Editorial build",
-    reportEyebrow: "Campaign Direction",
-    summaryTitle: "Editorial Summary",
-    phases: [
-      ["Chapter 1", "Signature silhouette and lookbook moodboard"],
-      ["Chapter 2", "Shoot concept, styling cuts, portfolio expansion"],
-      ["Chapter 3", "Brand proposal and campaign package"]
-    ],
-    questions: [
-      {
-        label: "BOARD 1",
-        title: "What is the main output for this portfolio?",
-        key: "interest",
-        options: [
-          ["identity", "Brand identity", "A memorable impression without a logo"],
-          ["lookbook", "Lookbook", "Outfit and pose-led pages"],
-          ["runway", "Runway mood", "Movement and structural tension"],
-          ["campaign", "Visual campaign", "Social-first visual expansion"]
-        ]
+      chat: {
+        eyebrow: "AURA Chat",
+        title: "Taste chat",
+        copy: "Continue with quick questions about makeup, hair, fashion, and interiors based on the current report.",
+        primary: "Start chat",
+        chips: ["Tone match", "Product picks", "Look pairing", "Room mood"],
       },
-      {
-        label: "BOARD 2",
-        title: "Which style keyword should lead?",
-        key: "style",
-        options: [
-          ["tailored", "Tailored", "Precise fit and lines"],
-          ["sculptural", "Sculptural", "Dimensional volume"],
-          ["street", "Street", "Layered texture"],
-          ["luxury", "Luxury", "Light, shine, and premium material"]
-        ]
+      expert: {
+        eyebrow: "AURA Expert",
+        title: "Expert consultation",
+        copy: "Send your AI report into a 1:1 consultation flow with a style expert.",
+        primary: "Request consult",
+        chips: ["Makeup", "Hair", "Fashion", "Interior"],
       },
-      {
-        label: "BOARD 3",
-        title: "What emotional temperature should the shoot have?",
-        key: "mood",
-        options: [
-          ["sharp", "Sharp", "Clear contrast"],
-          ["velvet", "Velvet", "Deep and soft shadow"],
-          ["metallic", "Metallic", "Cool reflected light"],
-          ["afterdark", "Afterdark", "Night warmth and tension"]
-        ]
-      }
-    ],
-    summaries: {
-      identity: "Define the brand's core impression through silhouette, typography, and color rules that hold the portfolio together.",
-      lookbook: "Shape outfit rhythm and page tension into an editorial sequence that reads like a finished lookbook.",
-      runway: "Center the direction on movement, line, and structure for a presentation that feels close to a runway story.",
-      campaign: "Build a campaign-ready direction with short copy, strong thumbnails, and repeatable visual rules."
     },
-    assist: {
-      chatAction: "Director",
-      expertAction: "Stylist",
-      chat: ["NOIR Director", "Moodboard chat", "Review lookbook order, material pairing, and campaign copy.", "Review board", ["Lookbook", "Shoot", "Copy"]],
-      expert: ["NOIR Stylist", "Stylist consult", "Connect the selected portfolio direction to outfit and shoot planning.", "Request consult", ["Outfit", "Pose", "Campaign"]]
-    }
-  },
-  concept3: {
-    ...portfolioData.ko.concepts.concept3,
-    eyebrow: "AI living wellness portfolio",
-    title: "A quiet life archive of space, scent, sound, and ritual.",
-    lead: "Analyze home scenes and daily rhythm, then turn living style and wellness routines into one portfolio.",
-    quizEyebrow: "Life rhythm check",
-    quizTitle: "Space taste design",
-    reportEyebrow: "Living Wellness Report",
-    summaryTitle: "Ritual Summary",
-    phases: [
-      ["Season 1", "Space tone, lighting, object curation"],
-      ["Season 2", "Scent, music, and ritual wellness plan"],
-      ["Season 3", "Home styling kits and class commerce"]
-    ],
-    questions: [
-      {
-        label: "RITUAL 1",
-        title: "Which part of daily life do you want to change first?",
-        key: "interest",
-        options: [
-          ["home", "Home styling", "First impression and movement in the room"],
-          ["wellness", "Wellness ritual", "Sleep, recovery, and routine"],
-          ["plant", "Plant styling", "Plants and natural light"],
-          ["table", "Table mood", "Meals and guest moments"]
-        ]
-      },
-      {
-        label: "RITUAL 2",
-        title: "Which style fits the space?",
-        key: "style",
-        options: [
-          ["organic", "Organic", "Curves and natural materials"],
-          ["japanese", "Japanese", "Whitespace and low furniture"],
-          ["nordic", "Nordic", "Bright wood and practical comfort"],
-          ["artisan", "Artisan", "Handmade object warmth"]
-        ]
-      },
-      {
-        label: "RITUAL 3",
-        title: "What feeling should the space hold?",
-        key: "mood",
-        options: [
-          ["fresh", "Fresh", "Clear air and lightness"],
-          ["grounded", "Grounded", "Low tone and stability"],
-          ["sunlit", "Sunlit", "Soft afternoon texture"],
-          ["quiet", "Quiet", "Sound and light softened down"]
-        ]
-      }
-    ],
-    summaries: {
-      home: "Refine the flow from entrance to resting place, then use lighting and objects to soften the first impression of everyday life.",
-      wellness: "Connect before-and-after sleep rituals, scent, sound, and light into a restorative living routine.",
-      plant: "Use plant height and daylight direction to create a balanced sense of movement in the space.",
-      table: "Match tableware, fabric, and lighting temperature to make everyday meals and guest moments feel connected."
+    chat: {
+      startedTitle: "AURA Chat Started",
+      startedCopy: "The chat is ready with your current style report.",
+      send: "Send message",
+      message: "Message",
+      placeholder: "Ask about tone, products, hair, outfits, or space mood.",
+      intro: ({ areaTitle, styleLabel, moodLabel }) =>
+        `AURA will start the consultation with the ${areaTitle} section and your ${styleLabel} ${moodLabel} mood.`,
+      you: "You",
+      reply: ({ areaTitle, tag }) =>
+        `Good. For ${areaTitle}, I would start from ${tag} and connect it with your current palette.`,
     },
-    assist: {
-      chatAction: "Ritual",
-      expertAction: "Space",
-      chat: ["VERDE Guide", "Ritual chat", "Pair space, scent, light, and sleep routines quickly.", "Make ritual", ["Scent", "Light", "Sleep"]],
-      expert: ["VERDE Stylist", "Space consult", "Connect your living report to home styling and wellness consultation.", "Request consult", ["Space", "Plants", "Table"]]
-    }
-  }
+    expert: {
+      readyTitle: "Consult Request Ready",
+      readyCopy: "Your current report is ready to hand off to an expert.",
+      readyButton: "Request ready",
+      section: "Section",
+      report: "Report",
+    },
+  },
 };
