@@ -1,4 +1,5 @@
 <!doctype html>
+{% load static %}
 <html lang="ko">
   <head>
     <meta charset="utf-8">
@@ -7,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{% static 'aura/styles.css' %}">
   </head>
   <body>
     <main class="app-shell">
@@ -79,7 +80,7 @@
 
             <div class="report-body">
               <div class="virtual-card">
-                <img src="assets/aura-reference.webp" alt="AURA consultation report reference">
+                <img src="{% static 'aura/assets/aura-reference.webp' %}" alt="AURA consultation report reference">
               </div>
               <div class="summary-card">
                 <h3 data-i18n="summaryTitle">AI Style Summary</h3>
@@ -107,6 +108,36 @@
       </section>
     </main>
 
-    <script src="app.js"></script>
+    <aside class="assist-dock" aria-label="AURA consultation tools">
+      <div class="assist-card" id="assistCard" hidden>
+        <div class="assist-card-head">
+          <div>
+            <p class="eyebrow" id="assistEyebrow">AURA Care</p>
+            <h2 id="assistTitle">스타일 상담</h2>
+          </div>
+          <button class="assist-close" type="button" id="assistClose" aria-label="Close consultation panel">×</button>
+        </div>
+        <p class="assist-copy" id="assistCopy">현재 취향 리포트를 바탕으로 메이크업, 헤어, 패션 연결 상담을 준비하고 있어요.</p>
+        <div class="assist-chips" id="assistChips"></div>
+        <button class="assist-primary" type="button" id="assistPrimary">상담 요청</button>
+      </div>
+
+      <div class="assist-actions">
+        <button class="assist-action" type="button" data-assist="chat" aria-label="Open AURA chat">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 6.8A4.8 4.8 0 0 1 9.8 2h4.4A4.8 4.8 0 0 1 19 6.8v3.4a4.8 4.8 0 0 1-4.8 4.8h-2.7L7 19v-4.2a4.8 4.8 0 0 1-2-3.9V6.8Z"/>
+          </svg>
+          <span id="chatActionLabel">챗</span>
+        </button>
+        <button class="assist-action is-accent" type="button" data-assist="expert" aria-label="Open expert consultation">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3.5a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm-6.5 16a6.5 6.5 0 0 1 13 0v.5h-13v-.5Zm13-11 2-1.1 2 1.1v2.2c0 1.5-.8 2.8-2 3.5a4 4 0 0 1-2-3.5V8.5Z"/>
+          </svg>
+          <span id="expertActionLabel">전문가</span>
+        </button>
+      </div>
+    </aside>
+
+    <script src="{% static 'aura/app.js' %}"></script>
   </body>
 </html>
