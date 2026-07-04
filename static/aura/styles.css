@@ -8,6 +8,8 @@
   --panel: rgba(255, 255, 255, 0.72);
   --line: rgba(95, 78, 113, 0.16);
   --shadow: 0 28px 80px rgba(90, 69, 104, 0.22);
+  --accent: #6f5a7a;
+  --hero-overlay: linear-gradient(rgba(255,255,255,0.44), rgba(255,255,255,0.76));
 }
 
 * {
@@ -23,6 +25,42 @@ body {
     radial-gradient(circle at 14% 18%, rgba(255, 255, 255, 0.92), transparent 24rem),
     radial-gradient(circle at 85% 22%, rgba(230, 230, 250, 0.85), transparent 28rem),
     linear-gradient(135deg, #fff8fb 0%, var(--pale-pink) 46%, #f2efff 100%);
+}
+
+body.concept-2 {
+  --pale-pink: #f8f1ea;
+  --lavender: #d8c6bb;
+  --lavender-deep: #8f1f36;
+  --rose: #c8b26a;
+  --ink: #221f22;
+  --muted: #695f5a;
+  --panel: rgba(255, 250, 244, 0.76);
+  --line: rgba(58, 39, 35, 0.18);
+  --shadow: 0 28px 80px rgba(40, 27, 29, 0.24);
+  --accent: #7a1730;
+  --hero-overlay: linear-gradient(rgba(255,250,244,0.2), rgba(255,250,244,0.82));
+  background:
+    radial-gradient(circle at 18% 14%, rgba(200, 178, 106, 0.36), transparent 20rem),
+    radial-gradient(circle at 84% 20%, rgba(122, 23, 48, 0.22), transparent 24rem),
+    linear-gradient(135deg, #fffaf4 0%, #eee3d9 48%, #282428 100%);
+}
+
+body.concept-3 {
+  --pale-pink: #f5fff8;
+  --lavender: #cfe5dc;
+  --lavender-deep: #5b8a73;
+  --rose: #e7a78e;
+  --ink: #26352d;
+  --muted: #607064;
+  --panel: rgba(250, 255, 250, 0.78);
+  --line: rgba(54, 91, 72, 0.17);
+  --shadow: 0 28px 80px rgba(42, 82, 62, 0.18);
+  --accent: #3f735a;
+  --hero-overlay: linear-gradient(rgba(250,255,250,0.28), rgba(250,255,250,0.82));
+  background:
+    radial-gradient(circle at 14% 18%, rgba(231, 167, 142, 0.28), transparent 22rem),
+    radial-gradient(circle at 82% 22%, rgba(91, 138, 115, 0.34), transparent 26rem),
+    linear-gradient(135deg, #fbfff8 0%, #e8f4e9 50%, #f5ead9 100%);
 }
 
 button {
@@ -73,6 +111,7 @@ button {
 }
 
 .topbar,
+.concept-picker,
 .content-grid {
   position: relative;
   z-index: 1;
@@ -144,6 +183,62 @@ button {
   padding: clamp(18px, 3vw, 42px);
 }
 
+.concept-picker {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(330px, 1.05fr);
+  gap: 22px;
+  padding: clamp(18px, 3vw, 42px) clamp(18px, 3vw, 42px) 0;
+}
+
+.concept-picker h1 {
+  font-size: clamp(30px, 4vw, 48px);
+}
+
+.concept-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  align-self: end;
+}
+
+.concept-option {
+  min-height: 96px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--ink);
+  text-align: left;
+  padding: 14px;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(90, 69, 104, 0.1);
+}
+
+.concept-option strong,
+.concept-option span {
+  display: block;
+}
+
+.concept-option strong {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.concept-option span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.concept-option.is-active {
+  color: #fff;
+  background: var(--accent);
+  border-color: transparent;
+}
+
+.concept-option.is-active span {
+  color: rgba(255, 255, 255, 0.86);
+}
+
 .intro-panel,
 .quiz-panel,
 .report-panel,
@@ -162,7 +257,21 @@ button {
   flex-direction: column;
   justify-content: space-between;
   background:
-    linear-gradient(rgba(255,255,255,0.44), rgba(255,255,255,0.76)),
+    var(--hero-overlay),
+    url("assets/aura-preview.webp") center / cover;
+}
+
+body.concept-2 .intro-panel {
+  background:
+    linear-gradient(135deg, rgba(36, 31, 34, 0.2), rgba(255, 250, 244, 0.84)),
+    repeating-linear-gradient(120deg, rgba(122, 23, 48, 0.2) 0 2px, transparent 2px 18px),
+    url("assets/aura-preview.webp") center / cover;
+}
+
+body.concept-3 .intro-panel {
+  background:
+    linear-gradient(135deg, rgba(251, 255, 248, 0.36), rgba(251, 255, 248, 0.86)),
+    radial-gradient(circle at 20% 20%, rgba(231, 167, 142, 0.4), transparent 14rem),
     url("assets/aura-preview.webp") center / cover;
 }
 
@@ -321,7 +430,7 @@ h2 {
 .primary-button {
   color: #fff;
   border-color: transparent;
-  background: #6f5a7a;
+  background: var(--accent);
 }
 
 .secondary-button {
@@ -478,7 +587,7 @@ h2 {
   min-height: 40px;
   border: 0;
   border-radius: 8px;
-  background: #6f5a7a;
+  background: var(--accent);
   color: #fff;
   cursor: pointer;
   font-weight: 700;
@@ -525,7 +634,7 @@ h2 {
 
 .assist-action.is-active {
   color: #fff;
-  background: #6f5a7a;
+  background: var(--accent);
 }
 
 .roadmap-panel {
@@ -567,8 +676,13 @@ h2 {
   }
 
   .content-grid,
+  .concept-picker,
   .report-body,
   .roadmap-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .concept-options {
     grid-template-columns: 1fr;
   }
 
@@ -590,6 +704,10 @@ h2 {
   .content-grid {
     padding: 14px;
     gap: 14px;
+  }
+
+  .concept-picker {
+    padding: 14px 14px 0;
   }
 
   .quiz-panel,
