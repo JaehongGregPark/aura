@@ -572,7 +572,8 @@ h2 {
   margin: 16px 0;
 }
 
-.assist-chips span {
+.assist-chips span,
+.assist-chip-button {
   border-radius: 999px;
   background: rgba(255, 240, 245, 0.95);
   border: 1px solid rgba(95, 78, 113, 0.1);
@@ -580,6 +581,47 @@ h2 {
   color: #6d5c70;
   font-size: 12px;
   font-weight: 700;
+}
+
+.assist-chip-button {
+  cursor: pointer;
+}
+
+.assist-chip-button.is-selected {
+  color: #fff;
+  background: var(--accent);
+  border-color: transparent;
+}
+
+.assist-summary {
+  display: grid;
+  gap: 8px;
+  margin: 4px 0 16px;
+  padding: 12px;
+  border: 1px solid rgba(95, 78, 113, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.assist-summary[hidden] {
+  display: none;
+}
+
+.assist-summary-row {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.assist-summary-row strong {
+  color: var(--accent);
+}
+
+.assist-summary-row span {
+  color: var(--ink);
 }
 
 .assist-primary {
@@ -591,6 +633,11 @@ h2 {
   color: #fff;
   cursor: pointer;
   font-weight: 700;
+}
+
+.assist-primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
 }
 
 .assist-actions {

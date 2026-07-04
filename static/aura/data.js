@@ -3,9 +3,9 @@ const portfolioData = {
     conceptUi: {
       eyebrow: "PORTFOLIO OPTIONS",
       title: "첫 화면 콘셉트를 선택하세요.",
-      lead: "1안은 현재 AURA 큐레이션을 유지하고, 2안과 3안은 완전히 다른 포트폴리오 무드로 전환됩니다.",
+      lead: "먼저 1안의 메이크업 중심 AURA를 기준으로 취향 분석과 상담 흐름을 완성하고, 이후 2안과 3안으로 확장합니다.",
       options: [
-        ["concept1", "1안", "AURA 뷰티 큐레이션"],
+        ["concept1", "1안", "메이크업 중심 AURA"],
         ["concept2", "2안", "패션 에디토리얼 아틀리에"],
         ["concept3", "3안", "리빙 웰니스 포트폴리오"]
       ]
@@ -19,18 +19,18 @@ const portfolioData = {
     concepts: {
       concept1: {
         brand: "AURA",
-        eyebrow: "AI 토탈 뷰티 큐레이션",
-        title: "메이크업에서 시작해 나만의 라이프스타일까지.",
-        lead: "관심사, 스타일, 분위기를 고르면 AURA가 메이크업 중심의 개인 취향 리포트와 확장 큐레이션을 생성합니다.",
+        eyebrow: "AI 메이크업 퍼스트 큐레이션",
+        title: "메이크업부터 분석하고, 어울리는 스타일을 확장합니다.",
+        lead: "피부 표현, 컬러 팔레트, 분위기를 먼저 정리한 뒤 헤어, 패션, 인테리어까지 자연스럽게 연결합니다.",
         journey: ["Makeup", "Hair", "Fashion", "Interior"],
         quizEyebrow: "온보딩 퀴즈",
-        quizTitle: "취향 분석",
-        reportEyebrow: "AI 스타일 리포트",
+        quizTitle: "메이크업 취향 분석",
+        reportEyebrow: "AI 메이크업 리포트",
         summaryTitle: "AI Style Summary",
         phases: [
-          ["Phase 1", "취향 분석 엔진, AI 리포트, 기본 큐레이션 UI"],
-          ["Phase 2", "전문가 상담 섹션과 1:1 매칭"],
-          ["Phase 3", "상품 연동과 스타일링 세트 커머스"]
+          ["Phase 1", "메이크업 취향 분석, AI 리포트, 기본 큐레이션 UI"],
+          ["Phase 2", "메이크업 전문가 상담과 1:1 매칭"],
+          ["Phase 3", "메이크업 키트, 헤어/패션 연동 커머스"]
         ],
         questions: [
           {
@@ -251,9 +251,9 @@ const portfolioData = {
     conceptUi: {
       eyebrow: "PORTFOLIO OPTIONS",
       title: "Choose the first-screen concept.",
-      lead: "Option 1 keeps the current AURA curation. Options 2 and 3 switch into entirely different portfolio moods.",
+      lead: "Start with Option 1, the makeup-first AURA flow. Options 2 and 3 remain ready as later portfolio expansions.",
       options: [
-        ["concept1", "Option 1", "AURA beauty curation"],
+        ["concept1", "Option 1", "Makeup-first AURA"],
         ["concept2", "Option 2", "Fashion editorial atelier"],
         ["concept3", "Option 3", "Living wellness portfolio"]
       ]
@@ -271,17 +271,59 @@ const portfolioData = {
 portfolioData.en.concepts = {
   concept1: {
     ...portfolioData.ko.concepts.concept1,
-    eyebrow: "AI total beauty curation",
-    title: "From makeup to a lifestyle that feels unmistakably yours.",
-    lead: "Choose your interests, style, and mood. AURA turns them into a makeup-led personal style report and connected curation.",
+    eyebrow: "AI makeup-first curation",
+    title: "Analyze makeup first, then expand into a connected style.",
+    lead: "Start with skin finish, color palette, and mood, then connect the result into hair, fashion, and interiors.",
     quizEyebrow: "Onboarding quiz",
-    quizTitle: "Taste analysis",
-    reportEyebrow: "AI style report",
+    quizTitle: "Makeup taste analysis",
+    reportEyebrow: "AI makeup report",
+    summaryTitle: "AI Style Summary",
     phases: [
-      ["Phase 1", "Taste engine, AI report, core curation UI"],
-      ["Phase 2", "Expert consultation and 1:1 matching"],
-      ["Phase 3", "Product links and styling-set commerce"]
+      ["Phase 1", "Makeup taste engine, AI report, core curation UI"],
+      ["Phase 2", "Makeup expert consultation and 1:1 matching"],
+      ["Phase 3", "Makeup kits with hair/fashion commerce"]
     ],
+    questions: [
+      {
+        label: "STEP 1",
+        title: "Which area should AURA curate first?",
+        key: "interest",
+        options: [
+          ["makeup", "Makeup", "Glow, base, and color matching"],
+          ["hair", "Hair", "Cut, tone, and color balance"],
+          ["fashion", "Fashion", "Silhouette and daily looks"],
+          ["interior", "Interior", "Extend the mood into your space"]
+        ]
+      },
+      {
+        label: "STEP 2",
+        title: "Which style direction feels closest?",
+        key: "style",
+        options: [
+          ["minimal", "Minimal", "Clean and refined impression"],
+          ["romantic", "Romantic", "Soft and lovely details"],
+          ["modern", "Modern", "Clear, polished balance"],
+          ["vintage", "Vintage", "Classic texture and color"]
+        ]
+      },
+      {
+        label: "STEP 3",
+        title: "What mood do you want today?",
+        key: "mood",
+        options: [
+          ["calm", "Calm", "Stable and gentle tone"],
+          ["glam", "Glam", "Sparkling point and definition"],
+          ["natural", "Natural", "Skin-first and effortless"],
+          ["urban", "Urban", "Chic contrast and sharpness"]
+        ]
+      }
+    ],
+    summaries: {
+      makeup: "Start with makeup as the anchor, then connect palette, hair tone, fashion colors, and space mood into one coherent taste profile.",
+      hair: "Use hair color and texture as the base, then tune makeup tone and wardrobe direction around it.",
+      fashion: "Use silhouette and material taste as the base, then balance makeup points and hair styling around the look.",
+      interior: "Start from spatial taste and translate it into makeup colors and styling moods that feel naturally connected."
+    },
     assist: {
       chatAction: "Chat",
       expertAction: "Expert",
@@ -297,11 +339,53 @@ portfolioData.en.concepts = {
     quizEyebrow: "Direction board",
     quizTitle: "Editorial build",
     reportEyebrow: "Campaign Direction",
+    summaryTitle: "Editorial Summary",
     phases: [
       ["Chapter 1", "Signature silhouette and lookbook moodboard"],
       ["Chapter 2", "Shoot concept, styling cuts, portfolio expansion"],
       ["Chapter 3", "Brand proposal and campaign package"]
     ],
+    questions: [
+      {
+        label: "BOARD 1",
+        title: "What is the main output for this portfolio?",
+        key: "interest",
+        options: [
+          ["identity", "Brand identity", "A memorable impression without a logo"],
+          ["lookbook", "Lookbook", "Outfit and pose-led pages"],
+          ["runway", "Runway mood", "Movement and structural tension"],
+          ["campaign", "Visual campaign", "Social-first visual expansion"]
+        ]
+      },
+      {
+        label: "BOARD 2",
+        title: "Which style keyword should lead?",
+        key: "style",
+        options: [
+          ["tailored", "Tailored", "Precise fit and lines"],
+          ["sculptural", "Sculptural", "Dimensional volume"],
+          ["street", "Street", "Layered texture"],
+          ["luxury", "Luxury", "Light, shine, and premium material"]
+        ]
+      },
+      {
+        label: "BOARD 3",
+        title: "What emotional temperature should the shoot have?",
+        key: "mood",
+        options: [
+          ["sharp", "Sharp", "Clear contrast"],
+          ["velvet", "Velvet", "Deep and soft shadow"],
+          ["metallic", "Metallic", "Cool reflected light"],
+          ["afterdark", "Afterdark", "Night warmth and tension"]
+        ]
+      }
+    ],
+    summaries: {
+      identity: "Define the brand's core impression through silhouette, typography, and color rules that hold the portfolio together.",
+      lookbook: "Shape outfit rhythm and page tension into an editorial sequence that reads like a finished lookbook.",
+      runway: "Center the direction on movement, line, and structure for a presentation that feels close to a runway story.",
+      campaign: "Build a campaign-ready direction with short copy, strong thumbnails, and repeatable visual rules."
+    },
     assist: {
       chatAction: "Director",
       expertAction: "Stylist",
@@ -317,11 +401,53 @@ portfolioData.en.concepts = {
     quizEyebrow: "Life rhythm check",
     quizTitle: "Space taste design",
     reportEyebrow: "Living Wellness Report",
+    summaryTitle: "Ritual Summary",
     phases: [
       ["Season 1", "Space tone, lighting, object curation"],
       ["Season 2", "Scent, music, and ritual wellness plan"],
       ["Season 3", "Home styling kits and class commerce"]
     ],
+    questions: [
+      {
+        label: "RITUAL 1",
+        title: "Which part of daily life do you want to change first?",
+        key: "interest",
+        options: [
+          ["home", "Home styling", "First impression and movement in the room"],
+          ["wellness", "Wellness ritual", "Sleep, recovery, and routine"],
+          ["plant", "Plant styling", "Plants and natural light"],
+          ["table", "Table mood", "Meals and guest moments"]
+        ]
+      },
+      {
+        label: "RITUAL 2",
+        title: "Which style fits the space?",
+        key: "style",
+        options: [
+          ["organic", "Organic", "Curves and natural materials"],
+          ["japanese", "Japanese", "Whitespace and low furniture"],
+          ["nordic", "Nordic", "Bright wood and practical comfort"],
+          ["artisan", "Artisan", "Handmade object warmth"]
+        ]
+      },
+      {
+        label: "RITUAL 3",
+        title: "What feeling should the space hold?",
+        key: "mood",
+        options: [
+          ["fresh", "Fresh", "Clear air and lightness"],
+          ["grounded", "Grounded", "Low tone and stability"],
+          ["sunlit", "Sunlit", "Soft afternoon texture"],
+          ["quiet", "Quiet", "Sound and light softened down"]
+        ]
+      }
+    ],
+    summaries: {
+      home: "Refine the flow from entrance to resting place, then use lighting and objects to soften the first impression of everyday life.",
+      wellness: "Connect before-and-after sleep rituals, scent, sound, and light into a restorative living routine.",
+      plant: "Use plant height and daylight direction to create a balanced sense of movement in the space.",
+      table: "Match tableware, fabric, and lighting temperature to make everyday meals and guest moments feel connected."
+    },
     assist: {
       chatAction: "Ritual",
       expertAction: "Space",
