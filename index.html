@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'aura/styles.css' %}?v=20260705-content-admin">
+    <link rel="stylesheet" href="{% static 'aura/styles.css' %}?v=20260705-auth-separate-modals">
   </head>
   <body>
     <main class="app-shell">
@@ -156,7 +156,58 @@
       </div>
     </aside>
 
-    <script src="{% static 'aura/data.js' %}?v=20260705-content-admin"></script>
-    <script src="{% static 'aura/app.js' %}?v=20260705-content-admin"></script>
+    <div class="auth-modal" id="loginModal" hidden>
+      <div class="auth-backdrop" data-auth-close></div>
+      <section class="auth-dialog auth-dialog-login" aria-label="AURA login">
+        <button class="auth-close" type="button" data-auth-close aria-label="Close">×</button>
+        <form class="auth-form" id="loginForm">
+          <h2>로그인</h2>
+          <label>아이디 또는 이메일<input name="loginId" type="text" autocomplete="username" required></label>
+          <label>비밀번호<input name="password" type="password" autocomplete="current-password" required></label>
+          <button class="primary-button" type="submit">로그인</button>
+          <div class="auth-switch">
+            <span>아직 회원이 아니신가요?</span>
+            <button type="button" id="showSignupButton">회원가입하기</button>
+          </div>
+        </form>
+        <p class="auth-status" id="loginStatus"></p>
+      </section>
+    </div>
+
+    <div class="auth-modal" id="signupModal" hidden>
+      <div class="auth-backdrop" data-auth-close></div>
+      <section class="auth-dialog auth-dialog-signup" aria-label="AURA signup">
+        <button class="auth-close" type="button" data-auth-close aria-label="Close">×</button>
+        <form class="auth-form" id="signupForm">
+          <h2>회원가입</h2>
+          <div class="auth-grid">
+            <label>아이디<input name="loginId" type="text" autocomplete="username" required></label>
+            <label>닉네임<input name="nickname" type="text" required></label>
+            <label>이메일<input name="email" type="email" autocomplete="email" required></label>
+            <label>비밀번호<input name="password" type="password" autocomplete="new-password" minlength="6" required></label>
+            <label>전화번호<input name="phone" type="text" placeholder="+1 213 555 0100"></label>
+            <label>도시<input name="city" type="text" placeholder="Los Angeles"></label>
+            <label class="full">주소 1<input name="line1" type="text" placeholder="100 Main St"></label>
+            <label class="full">주소 2<input name="line2" type="text" placeholder="Apt, suite, unit"></label>
+            <label>주<input name="state" type="text" placeholder="CA"></label>
+            <label>ZIP<input name="zip" type="text" placeholder="90001"></label>
+          </div>
+          <div class="signup-anniversary-head">
+            <strong>기념일</strong>
+            <button class="secondary-button" type="button" id="signupAnniversaryAdd">추가</button>
+          </div>
+          <div class="signup-anniversary-list" id="signupAnniversaryList"></div>
+          <button class="primary-button" type="submit">가입하기</button>
+          <div class="auth-switch">
+            <span>이미 계정이 있으신가요?</span>
+            <button type="button" id="showLoginButton">로그인으로 돌아가기</button>
+          </div>
+        </form>
+        <p class="auth-status" id="signupStatus"></p>
+      </section>
+    </div>
+
+    <script src="{% static 'aura/data.js' %}?v=20260705-auth-separate-modals"></script>
+    <script src="{% static 'aura/app.js' %}?v=20260705-auth-separate-modals"></script>
   </body>
 </html>

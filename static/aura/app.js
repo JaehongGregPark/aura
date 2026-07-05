@@ -12,6 +12,7 @@ let assistMode = "chat";
 let chatStarted = false;
 let expertRequested = false;
 let managedPortfolioData = portfolioData;
+let currentMember = null;
 
 const areaOrder = ["makeup", "hair", "fashion", "interior"];
 
@@ -44,6 +45,17 @@ const assistClose = document.querySelector("#assistClose");
 const assistButtons = document.querySelectorAll(".assist-action");
 const chatActionLabel = document.querySelector("#chatActionLabel");
 const expertActionLabel = document.querySelector("#expertActionLabel");
+const loginModal = document.querySelector("#loginModal");
+const signupModal = document.querySelector("#signupModal");
+const authCloseButtons = document.querySelectorAll("[data-auth-close]");
+const loginForm = document.querySelector("#loginForm");
+const signupForm = document.querySelector("#signupForm");
+const loginStatus = document.querySelector("#loginStatus");
+const signupStatus = document.querySelector("#signupStatus");
+const showSignupButton = document.querySelector("#showSignupButton");
+const showLoginButton = document.querySelector("#showLoginButton");
+const signupAnniversaryAdd = document.querySelector("#signupAnniversaryAdd");
+const signupAnniversaryList = document.querySelector("#signupAnniversaryList");
 
 function data() {
   return managedPortfolioData[lang];
@@ -77,6 +89,7 @@ function translate(nextLang) {
   authButtons.forEach((button) => {
     button.textContent = currentData.auth[button.dataset.auth];
   });
+  renderAuthState();
 
   chatActionLabel.textContent = currentData.assist.chatAction;
   expertActionLabel.textContent = currentData.assist.expertAction;
@@ -339,6 +352,109 @@ async function loadManagedContent() {
   }
 }
 
+async function loadAuthState() {
+  try {
+    const response = await fetch("/api/auth/me/", { cache: "no-store" });
+    if (!response.ok) throw new Error("Auth API failed");
+    const result = await response.json();
+    currentMember = result.authenticated ? result.member : null;
+  } catch (error) {
+    currentMember = null;
+  }
+  renderAuthState();
+}
+
+async function postJson(url, payload = {}) {
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok || result.ok === false) {
+    throw new Error(result.error || "요청을 처리하지 못했습니다.");
+  }
+  return result;
+}
+
+function renderAuthState() {
+  const loginButton = document.querySelector('[data-auth="login"]');
+  const guestButton = document.querySelector('[data-auth="guest"]');
+  if (!loginButton || !guestButton) return;
+
+  if (currentMember) {
+    loginButton.textContent = currentMember.nickname || currentMember.loginId || "Member";
+    guestButton.textContent = lang === "ko" ? "로그아웃" : "Logout";
+    loginButton.classList.add("is-active");
+    guestButton.classList.remove("is-active");
+    return;
+  }
+
+  loginButton.textContent = data().auth.login;
+  guestButton.textContent = data().auth.guest;
+  loginButton.classList.remove("is-active");
+  guestButton.classList.add("is-active");
+}
+
+function openLoginModal() {
+  signupModal.hidden = true;
+  loginModal.hidden = false;
+  setAuthStatus(loginStatus, "");
+  window.setTimeout(() => {
+    loginForm.querySelector('[name="loginId"]')?.focus();
+  }, 0);
+}
+
+function openSignupModal() {
+  loginModal.hidden = true;
+  signupModal.hidden = false;
+  setAuthStatus(signupStatus, "");
+  window.setTimeout(() => {
+    signupForm.querySelector('[name="loginId"]')?.focus();
+  }, 0);
+}
+
+function closeAuthModals() {
+  loginModal.hidden = true;
+  signupModal.hidden = true;
+}
+
+function setAuthStatus(target, message, kind = "") {
+  target.textContent = message;
+  target.className = `auth-status ${kind ? `is-${kind}` : ""}`;
+}
+
+function readSignupAnniversaries() {
+  return Array.from(signupAnniversaryList.querySelectorAll(".signup-anniversary-row"))
+    .map((row) => ({
+      type: row.querySelector('[name="anniversaryType"]').value.trim(),
+      date: row.querySelector('[name="anniversaryDate"]').value,
+      memo: row.querySelector('[name="anniversaryMemo"]').value.trim(),
+    }))
+    .filter((anniversary) => anniversary.type || anniversary.date || anniversary.memo);
+}
+
+function addSignupAnniversary(anniversary = {}) {
+  const row = document.createElement("div");
+  row.className = "signup-anniversary-row";
+  row.innerHTML = `
+    <label>기념일 종류<input name="anniversaryType" type="text" placeholder="생일, 결혼, 졸업" value="${escapeAttr(anniversary.type || "")}"></label>
+    <label>날짜<input name="anniversaryDate" type="date" value="${escapeAttr(anniversary.date || "")}"></label>
+    <button class="anniversary-remove" type="button" aria-label="기념일 삭제">×</button>
+    <label class="full">메모<input name="anniversaryMemo" type="text" placeholder="선물 취향, 상담 참고사항" value="${escapeAttr(anniversary.memo || "")}"></label>
+  `;
+  row.querySelector(".anniversary-remove").addEventListener("click", () => row.remove());
+  signupAnniversaryList.append(row);
+}
+
+function escapeAttr(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
 function startAutoCycle() {
   stopAutoCycle();
   autoCycleId = window.setInterval(() => {
@@ -372,9 +488,85 @@ langButtons.forEach((button) => {
 });
 
 authButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    authButtons.forEach((item) => item.classList.toggle("is-active", item === button));
+  button.addEventListener("click", async () => {
+    if (button.dataset.auth === "login") {
+      openLoginModal();
+      return;
+    }
+
+    if (currentMember) {
+      try {
+        await postJson("/api/auth/logout/");
+      } catch (error) {
+        setAuthStatus(loginStatus, error.message, "error");
+      }
+      currentMember = null;
+      renderAuthState();
+      return;
+    }
+
+    currentMember = null;
+    renderAuthState();
   });
+});
+
+authCloseButtons.forEach((button) => {
+  button.addEventListener("click", closeAuthModals);
+});
+showSignupButton.addEventListener("click", openSignupModal);
+showLoginButton.addEventListener("click", openLoginModal);
+
+signupAnniversaryAdd.addEventListener("click", () => addSignupAnniversary());
+
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const form = new FormData(loginForm);
+  setAuthStatus(loginStatus, "로그인 중입니다.");
+
+  try {
+    const result = await postJson("/api/auth/login/", {
+      loginId: form.get("loginId"),
+      password: form.get("password"),
+    });
+    currentMember = result.member;
+    loginForm.reset();
+    closeAuthModals();
+    renderAuthState();
+  } catch (error) {
+    setAuthStatus(loginStatus, error.message, "error");
+  }
+});
+
+signupForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const form = new FormData(signupForm);
+  setAuthStatus(signupStatus, "회원가입 중입니다.");
+
+  try {
+    const result = await postJson("/api/auth/signup/", {
+      loginId: form.get("loginId"),
+      nickname: form.get("nickname"),
+      email: form.get("email"),
+      password: form.get("password"),
+      phone: form.get("phone"),
+      address: {
+        line1: form.get("line1"),
+        line2: form.get("line2"),
+        city: form.get("city"),
+        state: form.get("state"),
+        zip: form.get("zip"),
+        country: "USA",
+      },
+      anniversaries: readSignupAnniversaries(),
+    });
+    currentMember = result.member;
+    signupForm.reset();
+    signupAnniversaryList.innerHTML = "";
+    closeAuthModals();
+    renderAuthState();
+  } catch (error) {
+    setAuthStatus(signupStatus, error.message, "error");
+  }
 });
 
 prevButton.addEventListener("click", () => {
@@ -408,5 +600,6 @@ assistClose.addEventListener("click", () => {
 
 loadManagedContent().finally(() => {
   translate("ko");
+  loadAuthState();
   startAutoCycle();
 });

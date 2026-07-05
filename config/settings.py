@@ -128,3 +128,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# Prototype auth uses JSON member storage, so signed-cookie sessions keep local
+# runs independent from database migrations. Revisit before production launch.
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"

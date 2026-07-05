@@ -1,14 +1,19 @@
 import json
+import uuid
 from json import JSONDecodeError
 
 from django.conf import settings
+from django.contrib.auth.hashers import check_password, make_password
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 
 
 CONTENT_PATH = settings.BASE_DIR / "static" / "aura" / "content.json"
 ADMIN_SETTINGS_PATH = settings.BASE_DIR / "config" / "aura_admin_settings.json"
+MEMBERS_PATH = settings.BASE_DIR / "config" / "aura_members.json"
 
 
 def _read_content():
@@ -117,6 +122,80 @@ def _write_admin_settings(settings_data):
         file.write("\n")
 
 
+def _default_members():
+    return {
+        "members": [
+            {
+                "id": "guest-001",
+                "loginId": "guest",
+                "nickname": "AURA Guest",
+                "email": "guest@example.com",
+                "address": {
+                    "line1": "100 Main St",
+                    "line2": "",
+                    "city": "Los Angeles",
+                    "state": "CA",
+                    "zip": "90001",
+                    "country": "USA",
+                },
+                "phone": "+1 213 555 0100",
+                "anniversaries": [
+                    {
+                        "type": "생일",
+                        "date": "1990-01-01",
+                        "memo": "샘플 기념일",
+                    }
+                ],
+                "memo": "샘플 회원",
+            }
+        ],
+        "messageLogs": [],
+    }
+
+
+def _read_members():
+    if not MEMBERS_PATH.exists():
+        _write_members(_default_members())
+    with MEMBERS_PATH.open("r", encoding="utf-8") as file:
+        data = json.load(file)
+    data.setdefault("members", [])
+    data.setdefault("messageLogs", [])
+    return data
+
+
+def _public_member(member):
+    public = dict(member)
+    public.pop("passwordHash", None)
+    return public
+
+
+def _find_member_by_login(data, login_id_or_email):
+    target = (login_id_or_email or "").strip().lower()
+    if not target:
+        return None
+    for member in data.get("members", []):
+        login_id = (member.get("loginId") or member.get("id") or "").lower()
+        email = (member.get("email") or "").lower()
+        if target in {login_id, email}:
+            return member
+    return None
+
+
+def _session_member(request):
+    member_id = request.session.get("aura_member_id")
+    if not member_id:
+        return None
+    data = _read_members()
+    return next((item for item in data["members"] if item.get("id") == member_id), None)
+
+
+def _write_members(data):
+    MEMBERS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with MEMBERS_PATH.open("w", encoding="utf-8") as file:
+        json.dump(data, file, ensure_ascii=False, indent=2)
+        file.write("\n")
+
+
 def _mask_key(value):
     if not value:
         return ""
@@ -141,12 +220,14 @@ def content_api(request):
 @require_GET
 def content_admin(request):
     admin_settings = _public_admin_settings(_read_admin_settings())
+    members = _read_members()
     return render(
         request,
         "content_admin.html",
         {
             "content_json": json.dumps(_read_content(), ensure_ascii=False, indent=2),
             "settings_json": json.dumps(admin_settings, ensure_ascii=False, indent=2),
+            "members_json": json.dumps(members, ensure_ascii=False, indent=2),
         },
     )
 
@@ -214,3 +295,182 @@ def admin_settings_save(request):
     }
     _write_admin_settings(settings_data)
     return JsonResponse({"ok": True})
+
+
+@require_GET
+def members_api(request):
+    data = _read_members()
+    public = {
+        "members": [_public_member(member) for member in data.get("members", [])],
+        "messageLogs": data.get("messageLogs", []),
+    }
+    return JsonResponse(public, json_dumps_params={"ensure_ascii": False})
+
+
+@require_GET
+def auth_me(request):
+    member = _session_member(request)
+    return JsonResponse(
+        {
+            "authenticated": bool(member),
+            "member": _public_member(member) if member else None,
+        },
+        json_dumps_params={"ensure_ascii": False},
+    )
+
+
+@csrf_exempt
+@require_POST
+def auth_signup(request):
+    try:
+        incoming = json.loads(request.body.decode("utf-8"))
+    except (UnicodeDecodeError, JSONDecodeError) as error:
+        return JsonResponse({"ok": False, "error": str(error)}, status=400)
+
+    login_id = incoming.get("loginId", "").strip()
+    nickname = incoming.get("nickname", "").strip()
+    email = incoming.get("email", "").strip()
+    password = incoming.get("password", "")
+
+    if not login_id or not nickname or not email or len(password) < 6:
+        return JsonResponse(
+            {
+                "ok": False,
+                "error": "아이디, 닉네임, 이메일, 6자 이상 비밀번호가 필요합니다.",
+            },
+            status=400,
+        )
+
+    data = _read_members()
+    if _find_member_by_login(data, login_id) or _find_member_by_login(data, email):
+        return JsonResponse(
+            {"ok": False, "error": "이미 등록된 아이디 또는 이메일입니다."},
+            status=409,
+        )
+
+    member = {
+        "id": f"member-{uuid.uuid4().hex[:12]}",
+        "loginId": login_id,
+        "nickname": nickname,
+        "email": email,
+        "passwordHash": make_password(password),
+        "phone": incoming.get("phone", "").strip(),
+        "address": incoming.get("address")
+        or {
+            "line1": "",
+            "line2": "",
+            "city": "",
+            "state": "",
+            "zip": "",
+            "country": "USA",
+        },
+        "anniversaries": incoming.get("anniversaries") or [],
+        "role": "member",
+        "createdAt": timezone.now().isoformat(),
+        "memo": "클라이언트 회원가입",
+    }
+    data["members"].append(member)
+    _write_members(data)
+    request.session["aura_member_id"] = member["id"]
+    return JsonResponse(
+        {"ok": True, "member": _public_member(member)},
+        json_dumps_params={"ensure_ascii": False},
+    )
+
+
+@csrf_exempt
+@require_POST
+def auth_login(request):
+    try:
+        incoming = json.loads(request.body.decode("utf-8"))
+    except (UnicodeDecodeError, JSONDecodeError) as error:
+        return JsonResponse({"ok": False, "error": str(error)}, status=400)
+
+    login_id = incoming.get("loginId", "").strip()
+    password = incoming.get("password", "")
+    data = _read_members()
+    member = _find_member_by_login(data, login_id)
+
+    if not member or not member.get("passwordHash"):
+        return JsonResponse(
+            {"ok": False, "error": "로그인 정보를 확인해 주세요."},
+            status=401,
+        )
+
+    if not check_password(password, member["passwordHash"]):
+        return JsonResponse(
+            {"ok": False, "error": "로그인 정보를 확인해 주세요."},
+            status=401,
+        )
+
+    request.session["aura_member_id"] = member["id"]
+    return JsonResponse(
+        {"ok": True, "member": _public_member(member)},
+        json_dumps_params={"ensure_ascii": False},
+    )
+
+
+@csrf_exempt
+@require_POST
+def auth_logout(request):
+    request.session.pop("aura_member_id", None)
+    return JsonResponse({"ok": True})
+
+
+@require_POST
+def members_save(request):
+    try:
+        incoming = json.loads(request.body.decode("utf-8"))
+    except (UnicodeDecodeError, JSONDecodeError) as error:
+        return JsonResponse({"ok": False, "error": str(error)}, status=400)
+
+    if not isinstance(incoming, dict) or not isinstance(incoming.get("members"), list):
+        return JsonResponse(
+            {"ok": False, "error": "Members payload must include members list."},
+            status=400,
+        )
+
+    current = _read_members()
+    next_data = {
+        "members": incoming.get("members", []),
+        "messageLogs": current.get("messageLogs", []),
+    }
+    _write_members(next_data)
+    return JsonResponse({"ok": True})
+
+
+@require_POST
+def member_message_send(request):
+    try:
+        incoming = json.loads(request.body.decode("utf-8"))
+    except (UnicodeDecodeError, JSONDecodeError) as error:
+        return JsonResponse({"ok": False, "error": str(error)}, status=400)
+
+    member_id = incoming.get("memberId")
+    channel = incoming.get("channel")
+    subject = incoming.get("subject", "")
+    message = incoming.get("message", "")
+
+    if channel not in {"email", "chat"} or not member_id or not message:
+        return JsonResponse(
+            {"ok": False, "error": "memberId, channel, and message are required."},
+            status=400,
+        )
+
+    data = _read_members()
+    member = next((item for item in data["members"] if item.get("id") == member_id), None)
+    if not member:
+        return JsonResponse({"ok": False, "error": "Member not found."}, status=404)
+
+    data["messageLogs"].append(
+        {
+            "memberId": member_id,
+            "channel": channel,
+            "subject": subject,
+            "message": message,
+            "status": "logged",
+            "note": "외부 발송 API 미연동 상태이므로 관리자 발송 기록만 저장했습니다.",
+        }
+    )
+    _write_members(data)
+    return JsonResponse({"ok": True, "status": "logged"})

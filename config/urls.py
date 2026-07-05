@@ -25,12 +25,23 @@ urlpatterns = [
     path("", TemplateView.as_view(template_name="index.html"), name="home"),
     path("api/content/", views.content_api, name="content_api"),
     path("api/admin-settings/", views.admin_settings_api, name="admin_settings_api"),
+    path("api/members/", views.members_api, name="members_api"),
+    path("api/auth/me/", views.auth_me, name="auth_me"),
+    path("api/auth/signup/", views.auth_signup, name="auth_signup"),
+    path("api/auth/login/", views.auth_login, name="auth_login"),
+    path("api/auth/logout/", views.auth_logout, name="auth_logout"),
     path("aura-admin/", views.content_admin, name="content_admin"),
     path("aura-admin/save/", views.content_admin_save, name="content_admin_save"),
     path(
         "aura-admin/settings/save/",
         views.admin_settings_save,
         name="admin_settings_save",
+    ),
+    path("aura-admin/members/save/", views.members_save, name="members_save"),
+    path(
+        "aura-admin/members/send/",
+        views.member_message_send,
+        name="member_message_send",
     ),
     path("admin/", admin.site.urls),
 ]
