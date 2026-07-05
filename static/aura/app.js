@@ -11,6 +11,7 @@ let userHasChosenArea = false;
 let assistMode = "chat";
 let chatStarted = false;
 let expertRequested = false;
+let managedPortfolioData = portfolioData;
 
 const areaOrder = ["makeup", "hair", "fashion", "interior"];
 
@@ -45,7 +46,7 @@ const chatActionLabel = document.querySelector("#chatActionLabel");
 const expertActionLabel = document.querySelector("#expertActionLabel");
 
 function data() {
-  return portfolioData[lang];
+  return managedPortfolioData[lang];
 }
 
 function area() {
@@ -243,7 +244,7 @@ function renderChatStarted() {
   thread.setAttribute("aria-live", "polite");
 
   const intro = document.createElement("p");
-  intro.innerHTML = `<strong>AURA</strong> ${chat.intro({
+  intro.innerHTML = `<strong>AURA</strong> ${formatTemplate(chat.introTemplate, {
     areaTitle: current.title,
     styleLabel: currentLabels[answers.style],
     moodLabel: currentLabels[answers.mood],
@@ -274,7 +275,7 @@ function renderChatStarted() {
     userMessage.innerHTML = `<strong>${chat.you}</strong> ${escapeHtml(value)}`;
 
     const auraMessage = document.createElement("p");
-    auraMessage.innerHTML = `<strong>AURA</strong> ${chat.reply({
+    auraMessage.innerHTML = `<strong>AURA</strong> ${formatTemplate(chat.replyTemplate, {
       areaTitle: current.title,
       tag: current.tags[0],
     })}`;
@@ -319,6 +320,23 @@ function escapeHtml(value) {
   const element = document.createElement("span");
   element.textContent = value;
   return element.innerHTML;
+}
+
+function formatTemplate(template, values) {
+  return Object.entries(values).reduce(
+    (text, [key, value]) => text.replaceAll(`{${key}}`, value),
+    template
+  );
+}
+
+async function loadManagedContent() {
+  try {
+    const response = await fetch("/api/content/", { cache: "no-store" });
+    if (!response.ok) throw new Error("Content API failed");
+    managedPortfolioData = await response.json();
+  } catch (error) {
+    managedPortfolioData = portfolioData;
+  }
 }
 
 function startAutoCycle() {
@@ -388,5 +406,7 @@ assistClose.addEventListener("click", () => {
   renderAssist();
 });
 
-translate("ko");
-startAutoCycle();
+loadManagedContent().finally(() => {
+  translate("ko");
+  startAutoCycle();
+});

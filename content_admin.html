@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AURA Admin</title>
+    <style>
+      :root {
+        --bg: #f7f3f6;
+        --panel: #ffffff;
+        --ink: #302a35;
+        --muted: #746b78;
+        --line: rgba(80, 65, 90, 0.16);
+        --accent: #6f5a7a;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        background: var(--bg);
+        font-family: Inter, "Noto Sans KR", system-ui, sans-serif;
+      }
+
+      button, input, textarea { font: inherit; }
+
+      .admin-shell {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 28px;
+      }
+
+      .admin-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .admin-topbar h1 {
+        margin: 0;
+        font-size: 28px;
+      }
+
+      .admin-topbar p,
+      .help-text {
+        margin: 6px 0 0;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .top-actions,
+      .module-tabs,
+      .row-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .button,
+      .module-tab {
+        min-height: 40px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 0 14px;
+        color: var(--ink);
+        background: var(--panel);
+        cursor: pointer;
+        font-weight: 800;
+        text-decoration: none;
+      }
+
+      .button.primary,
+      .module-tab.is-active {
+        color: #fff;
+        border-color: transparent;
+        background: var(--accent);
+      }
+
+      .module-tabs { margin-bottom: 18px; }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 18px;
+      }
+
+      .sidebar,
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        box-shadow: 0 18px 44px rgba(60, 46, 68, 0.08);
+      }
+
+      .sidebar {
+        padding: 12px;
+        align-self: start;
+      }
+
+      .nav-button {
+        width: 100%;
+        min-height: 40px;
+        border: 0;
+        border-radius: 8px;
+        padding: 0 12px;
+        color: var(--muted);
+        background: transparent;
+        text-align: left;
+        cursor: pointer;
+        font-weight: 800;
+      }
+
+      .nav-button.is-active {
+        color: #fff;
+        background: var(--accent);
+      }
+
+      .panel { padding: 18px; }
+
+      .section-title {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 16px;
+      }
+
+      .section-title h2 {
+        margin: 0;
+        font-size: 22px;
+      }
+
+      .section-title span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .field-grid,
+      .settings-grid,
+      .doc-grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      .field,
+      .settings-card,
+      .doc-card {
+        display: grid;
+        gap: 8px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fffafd;
+      }
+
+      .settings-card {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        align-items: end;
+      }
+
+      .doc-card h3 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .doc-card p,
+      .doc-card li {
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .doc-card ul,
+      .doc-card ol {
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      .code-block {
+        margin: 0;
+        padding: 12px;
+        overflow-x: auto;
+        border-radius: 8px;
+        background: #2f2a35;
+        color: #fff;
+        font-family: Consolas, monospace;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      label {
+        display: grid;
+        gap: 7px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      input, textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px;
+        color: var(--ink);
+        background: #fff;
+      }
+
+      textarea {
+        min-height: 44px;
+        resize: vertical;
+      }
+
+      input:focus,
+      textarea:focus {
+        outline: 2px solid rgba(111, 90, 122, 0.2);
+        border-color: var(--accent);
+      }
+
+      .checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--ink);
+        font-size: 14px;
+      }
+
+      .checkbox-row input { width: auto; }
+
+      .status {
+        min-height: 20px;
+        margin-top: 14px;
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      .status.is-ok { color: #2f7355; }
+      .status.is-error { color: #9d3147; }
+
+      details { margin-top: 18px; }
+
+      summary {
+        cursor: pointer;
+        color: var(--accent);
+        font-weight: 800;
+      }
+
+      #rawJson {
+        min-height: 260px;
+        margin-top: 10px;
+        font-family: Consolas, monospace;
+        font-size: 13px;
+      }
+
+      [hidden] { display: none !important; }
+
+      @media (max-width: 760px) {
+        .admin-shell { padding: 16px; }
+        .admin-topbar,
+        .layout,
+        .settings-card {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="admin-shell">
+      <header class="admin-topbar">
+        <div>
+          <h1>AURA 관리자</h1>
+          <p>앱 페이지 구조, 문구, API key, 사진, 스타일 설정을 관리합니다.</p>
+        </div>
+        <div class="top-actions">
+          <a class="button" href="/" target="_blank" rel="noreferrer">메인 화면 보기</a>
+        </div>
+      </header>
+
+      <nav class="module-tabs" aria-label="Admin sections">
+        <button class="module-tab is-active" type="button" data-module="page">앱 페이지 관리</button>
+        <button class="module-tab" type="button" data-module="content">문구관리</button>
+        <button class="module-tab" type="button" data-module="api">API key 관리</button>
+        <button class="module-tab" type="button" data-module="photos">사진관리</button>
+        <button class="module-tab" type="button" data-module="styles">스타일관리</button>
+      </nav>
+
+      <section class="panel" id="pageModule">
+        <div class="section-title">
+          <div>
+            <h2>앱 페이지 관리</h2>
+            <p class="help-text">전체 홈페이지 타입과 마법사 구조에 대한 기획 문서입니다. 현재는 기능 구현이 아닌 운영 기준 문서로 제공합니다.</p>
+          </div>
+        </div>
+
+        <div class="doc-grid">
+          <article class="doc-card">
+            <h3>개요</h3>
+            <p>이 방향은 AURA를 단순 페이지가 아니라 “페이지 타입/템플릿 기반 앱 빌더”로 확장하는 구조입니다. 현재 관리자 화면이 문구, API key, 사진, 스타일로 나뉘고 있으므로, 그 위에 앱 페이지 관리를 최상위 개념으로 두는 것이 자연스럽습니다.</p>
+          </article>
+
+          <article class="doc-card">
+            <h3>관리 섹션 구성</h3>
+            <pre class="code-block">앱 페이지 관리
+- 현재 적용 타입: A1
+- 타입 목록: A1, A2, B1, B2, B3
+- 새 타입 생성
+- 기존 타입 복제
+- 타입 이름/설명 변경
+- 타입 삭제
+- 타입 적용
+- 미리보기</pre>
+          </article>
+
+          <article class="doc-card">
+            <h3>페이지 타입의 의미</h3>
+            <p>각 타입은 하나의 “홈페이지 설정 묶음”입니다.</p>
+            <pre class="code-block">A1 타입
+- 문구 설정
+- 사진 설정
+- 스타일 설정
+- 채팅/전문가 버튼 설정
+- 섹션 구성
+- 기본 언어
+- 첫 화면 자동 전환 여부
+- API 연결 방식</pre>
+          </article>
+
+          <article class="doc-card">
+            <h3>추천 데이터 구조</h3>
+            <pre class="code-block">{
+  "activePageType": "A1",
+  "pageTypes": {
+    "A1": {
+      "name": "AURA 기본형",
+      "description": "메이크업 중심 토탈 큐레이션",
+      "content": {},
+      "photos": {},
+      "styles": {},
+      "features": {}
+    },
+    "A2": {
+      "name": "AURA 프리미엄형",
+      "description": "전문가 상담 중심",
+      "content": {},
+      "photos": {},
+      "styles": {},
+      "features": {}
+    }
+  }
+}</pre>
+          </article>
+
+          <article class="doc-card">
+            <h3>관리 흐름</h3>
+            <ol>
+              <li>앱 페이지 관리에서 A1 선택</li>
+              <li>문구관리로 가면 A1의 문구를 편집</li>
+              <li>사진관리로 가면 A1의 사진을 편집</li>
+              <li>스타일관리로 가면 A1의 스타일을 편집</li>
+              <li>A2 선택 시 모든 관리 화면이 A2 기준으로 전환</li>
+            </ol>
+          </article>
+
+          <article class="doc-card">
+            <h3>타입 예시</h3>
+            <ul>
+              <li>A1: 메이크업 중심 앱</li>
+              <li>A2: 헤어/메이크업 혼합 앱</li>
+              <li>B1: 패션 에디토리얼 앱</li>
+              <li>B2: 인테리어 큐레이션 앱</li>
+              <li>B3: 전문가 상담 랜딩형 앱</li>
+            </ul>
+          </article>
+
+          <article class="doc-card">
+            <h3>구현 시 주의점</h3>
+            <ol>
+              <li>삭제는 바로 삭제하지 말고 비활성/보관 처리 추천</li>
+              <li>A1 같은 기본 타입은 삭제 불가로 잠금 처리 추천</li>
+              <li>새 타입 생성보다 “A1 복제 후 A2로 수정” 흐름이 중요</li>
+              <li>편집 중인 타입과 실제 적용 타입은 분리 추천</li>
+            </ol>
+          </article>
+
+          <article class="doc-card">
+            <h3>추천 관리자 탭 순서</h3>
+            <pre class="code-block">앱 페이지 관리
+문구관리
+사진관리
+스타일관리
+API key 관리</pre>
+          </article>
+
+          <article class="doc-card">
+            <h3>1차 구현 범위</h3>
+            <ul>
+              <li>앱 페이지 타입 목록</li>
+              <li>현재 적용 타입 표시</li>
+              <li>타입 선택</li>
+              <li>타입 복제</li>
+              <li>타입 이름/설명 수정</li>
+              <li>타입 적용</li>
+              <li>타입 보관/삭제</li>
+              <li>문구/사진/스타일이 선택된 타입 기준으로 저장</li>
+            </ul>
+          </article>
+
+          <article class="doc-card">
+            <h3>2차 확장</h3>
+            <ul>
+              <li>미리보기</li>
+              <li>타입별 URL</li>
+              <li>타입별 공개/비공개</li>
+              <li>AI로 타입 자동 생성</li>
+              <li>이미지 업로드</li>
+              <li>변경 이력/되돌리기</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="contentModule" hidden>
+        <div class="layout">
+          <aside class="sidebar" id="sectionNav" aria-label="Content sections"></aside>
+          <section class="panel">
+            <div class="section-title">
+              <div>
+                <h2 id="sectionTitle">문구</h2>
+                <span id="fieldCount">0 fields</span>
+              </div>
+              <div class="row-actions">
+                <button class="button" type="button" id="resetContentButton">원본 다시 불러오기</button>
+                <button class="button primary" type="button" id="saveContentButton">문구 저장</button>
+              </div>
+            </div>
+            <div class="field-grid" id="fieldGrid"></div>
+            <div class="status" id="contentStatus"></div>
+            <details>
+              <summary>JSON 원본 보기</summary>
+              <textarea id="rawJson" spellcheck="false"></textarea>
+            </details>
+          </section>
+        </div>
+      </section>
+
+      <section class="panel" id="apiModule" hidden>
+        <div class="section-title">
+          <div>
+            <h2>API key 관리</h2>
+            <p class="help-text">AI 상담용 LLM을 복수 선택하고, provider별 API key와 LLM 버전을 관리합니다. 저장된 key는 전체 노출하지 않고 마스킹합니다.</p>
+          </div>
+          <button class="button primary" type="button" id="saveApiButton">LLM 설정 저장</button>
+        </div>
+        <div class="settings-grid" id="llmProviderGrid"></div>
+        <article class="doc-card">
+          <h3>추후 질문유형 관리 DB 설계</h3>
+          <p>질문유형은 언어별로 분리해 관리할 예정입니다. LLM provider 설정과 독립된 구조로 두면, 같은 질문유형을 ChatGPT/Gemini/Claude 중 선택된 모델에 공통 적용할 수 있습니다.</p>
+          <pre class="code-block">questionTypes
+- ko
+  - id: makeup_consult
+  - label: 메이크업 상담
+  - promptType: consultation
+  - enabled: true
+- en
+  - id: makeup_consult
+  - label: Makeup consultation
+  - promptType: consultation
+  - enabled: true</pre>
+        </article>
+        <div class="status" id="apiStatus"></div>
+      </section>
+
+      <section class="panel" id="photosModule" hidden>
+        <div class="section-title">
+          <div>
+            <h2>사진관리</h2>
+            <p class="help-text">현재는 이미지 경로/URL을 관리합니다. 업로드 기능은 추후 연결할 수 있습니다.</p>
+          </div>
+          <button class="button primary" type="button" id="savePhotosButton">사진 설정 저장</button>
+        </div>
+        <div class="settings-grid">
+          <div class="settings-card">
+            <label>히어로 이미지 경로<input id="heroImageInput" type="text"></label>
+            <label>리포트 이미지 경로<input id="reportImageInput" type="text"></label>
+            <label>갤러리 이미지 경로<textarea id="galleryInput" rows="5"></textarea></label>
+          </div>
+        </div>
+        <div class="status" id="photosStatus"></div>
+      </section>
+
+      <section class="panel" id="stylesModule" hidden>
+        <div class="section-title">
+          <div>
+            <h2>스타일관리</h2>
+            <p class="help-text">기본 섹션, 자동 전환 여부, 스타일 메모를 관리합니다.</p>
+          </div>
+          <button class="button primary" type="button" id="saveStylesButton">스타일 설정 저장</button>
+        </div>
+        <div class="settings-grid">
+          <div class="settings-card">
+            <label>기본 섹션
+              <input id="defaultAreaInput" type="text" placeholder="makeup, hair, fashion, interior">
+            </label>
+            <label class="checkbox-row">
+              <input id="autoCycleInput" type="checkbox">
+              첫 화면 자동 전환 사용
+            </label>
+            <label>스타일 메모<textarea id="themeMemoInput" rows="4"></textarea></label>
+          </div>
+        </div>
+        <div class="status" id="stylesStatus"></div>
+      </section>
+    </main>
+
+    <script>
+      const initialContent = {{ content_json|safe }};
+      const initialSettings = {{ settings_json|safe }};
+      const csrfToken = "{{ csrf_token }}";
+
+      const sectionNames = {
+        "ko.nav": "한글 / 상단 섹션",
+        "ko.auth": "한글 / 로그인",
+        "ko.common": "한글 / 공통 문구",
+        "ko.areas": "한글 / 섹션별 문구",
+        "ko.questions": "한글 / 퀴즈",
+        "ko.assist": "한글 / 상담 버튼",
+        "ko.chat": "한글 / 채팅",
+        "ko.expert": "한글 / 전문가",
+        "en.nav": "English / Navigation",
+        "en.auth": "English / Auth",
+        "en.common": "English / Common",
+        "en.areas": "English / Sections",
+        "en.questions": "English / Quiz",
+        "en.assist": "English / Assist",
+        "en.chat": "English / Chat",
+        "en.expert": "English / Expert"
+      };
+
+      const editableSections = Object.keys(sectionNames);
+      let content = structuredClone(initialContent);
+      let adminSettings = structuredClone(initialSettings);
+      let activeSection = editableSections[0];
+
+      const modules = {
+        page: document.querySelector("#pageModule"),
+        content: document.querySelector("#contentModule"),
+        api: document.querySelector("#apiModule"),
+        photos: document.querySelector("#photosModule"),
+        styles: document.querySelector("#stylesModule")
+      };
+
+      function getByPath(root, path) {
+        return path.split(".").reduce((value, key) => value?.[key], root);
+      }
+
+      function setByPath(root, path, value) {
+        const parts = path.split(".");
+        const last = parts.pop();
+        const parent = parts.reduce((target, key) => target[key], root);
+        parent[last] = value;
+      }
+
+      function collectStringFields(value, basePath = "") {
+        if (typeof value === "string") return [{ path: basePath, value }];
+        if (Array.isArray(value)) {
+          return value.flatMap((item, index) => collectStringFields(item, `${basePath}.${index}`));
+        }
+        if (value && typeof value === "object") {
+          return Object.entries(value).flatMap(([key, item]) => {
+            const path = basePath ? `${basePath}.${key}` : key;
+            return collectStringFields(item, path);
+          });
+        }
+        return [];
+      }
+
+      function setStatus(id, message, kind = "") {
+        const status = document.querySelector(id);
+        status.textContent = message;
+        status.className = `status ${kind ? `is-${kind}` : ""}`;
+      }
+
+      function renderContentNav() {
+        const sectionNav = document.querySelector("#sectionNav");
+        sectionNav.innerHTML = "";
+        editableSections.forEach((section) => {
+          const button = document.createElement("button");
+          button.className = "nav-button";
+          button.type = "button";
+          button.textContent = sectionNames[section];
+          button.classList.toggle("is-active", section === activeSection);
+          button.addEventListener("click", () => {
+            activeSection = section;
+            renderContent();
+          });
+          sectionNav.append(button);
+        });
+      }
+
+      function renderContent() {
+        renderContentNav();
+        const fields = collectStringFields(getByPath(content, activeSection), activeSection);
+        document.querySelector("#sectionTitle").textContent = sectionNames[activeSection];
+        document.querySelector("#fieldCount").textContent = `${fields.length} fields`;
+        const fieldGrid = document.querySelector("#fieldGrid");
+        fieldGrid.innerHTML = "";
+
+        fields.forEach((field) => {
+          const wrapper = document.createElement("div");
+          wrapper.className = "field";
+          const label = document.createElement("label");
+          label.textContent = field.path;
+          const input = document.createElement("textarea");
+          input.rows = field.value.length > 70 ? 3 : 1;
+          input.value = field.value;
+          input.addEventListener("input", () => {
+            setByPath(content, field.path, input.value);
+            syncRawJson();
+            setStatus("#contentStatus", "수정 중");
+          });
+          wrapper.append(label, input);
+          fieldGrid.append(wrapper);
+        });
+
+        syncRawJson();
+      }
+
+      function syncRawJson() {
+        document.querySelector("#rawJson").value = JSON.stringify(content, null, 2);
+      }
+
+      function applyRawJson() {
+        content = JSON.parse(document.querySelector("#rawJson").value);
+      }
+
+      function renderLlmProviders() {
+        const grid = document.querySelector("#llmProviderGrid");
+        grid.innerHTML = "";
+        Object.entries(adminSettings.llmProviders).forEach(([providerId, item]) => {
+          const card = document.createElement("div");
+          card.className = "settings-card";
+          card.innerHTML = `
+            <label class="checkbox-row">
+              <input type="checkbox" data-llm-field="enabled" data-provider="${providerId}" ${item.enabled ? "checked" : ""}>
+              ${escapeAttr(item.label || providerId.toUpperCase())} 사용
+            </label>
+            <label>LLM 버전<input type="text" data-llm-field="version" data-provider="${providerId}" value="${escapeAttr(item.version || "")}" placeholder="예: gpt-4.1-mini"></label>
+            <label>새 API key<input type="password" data-llm-field="apiKey" data-provider="${providerId}" placeholder="${escapeAttr(item.maskedKey || "새 key 입력")}"></label>
+            <label>메모<input type="text" data-llm-field="memo" data-provider="${providerId}" value="${escapeAttr(item.memo || "")}"></label>
+          `;
+          grid.append(card);
+        });
+
+        grid.querySelectorAll("input").forEach((input) => {
+          input.addEventListener("input", () => {
+            const provider = adminSettings.llmProviders[input.dataset.provider];
+            const field = input.dataset.llmField;
+            provider[field] = input.type === "checkbox" ? input.checked : input.value;
+          });
+        });
+      }
+
+      function renderPhotos() {
+        const photos = adminSettings.photos;
+        document.querySelector("#heroImageInput").value = photos.heroImage || "";
+        document.querySelector("#reportImageInput").value = photos.reportImage || "";
+        document.querySelector("#galleryInput").value = (photos.gallery || []).join("\n");
+      }
+
+      function readPhotos() {
+        adminSettings.photos = {
+          heroImage: document.querySelector("#heroImageInput").value.trim(),
+          reportImage: document.querySelector("#reportImageInput").value.trim(),
+          gallery: document.querySelector("#galleryInput").value.split("\n").map((value) => value.trim()).filter(Boolean)
+        };
+      }
+
+      function renderStyles() {
+        const styles = adminSettings.styles;
+        document.querySelector("#defaultAreaInput").value = styles.defaultArea || "makeup";
+        document.querySelector("#autoCycleInput").checked = Boolean(styles.autoCycle);
+        document.querySelector("#themeMemoInput").value = styles.themeMemo || "";
+      }
+
+      function readStyles() {
+        adminSettings.styles = {
+          defaultArea: document.querySelector("#defaultAreaInput").value.trim() || "makeup",
+          autoCycle: document.querySelector("#autoCycleInput").checked,
+          themeMemo: document.querySelector("#themeMemoInput").value
+        };
+      }
+
+      function escapeAttr(value) {
+        return String(value).replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;");
+      }
+
+      async function saveJson(url, payload, statusId, okMessage) {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken
+          },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok || !result.ok) throw new Error(result.error || "저장 실패");
+        setStatus(statusId, okMessage, "ok");
+      }
+
+      document.querySelectorAll(".module-tab").forEach((button) => {
+        button.addEventListener("click", () => {
+          document.querySelectorAll(".module-tab").forEach((item) => item.classList.toggle("is-active", item === button));
+          Object.entries(modules).forEach(([key, module]) => {
+            module.hidden = key !== button.dataset.module;
+          });
+        });
+      });
+
+      document.querySelector("#resetContentButton").addEventListener("click", () => {
+        content = structuredClone(initialContent);
+        renderContent();
+        setStatus("#contentStatus", "원본을 다시 불러왔습니다.", "ok");
+      });
+
+      document.querySelector("#rawJson").addEventListener("change", () => {
+        try {
+          applyRawJson();
+          renderContent();
+          setStatus("#contentStatus", "JSON 원본을 반영했습니다.", "ok");
+        } catch (error) {
+          setStatus("#contentStatus", `JSON 오류: ${error.message}`, "error");
+        }
+      });
+
+      document.querySelector("#saveContentButton").addEventListener("click", async () => {
+        try {
+          applyRawJson();
+          await saveJson("/aura-admin/save/", content, "#contentStatus", "문구를 저장했습니다.");
+        } catch (error) {
+          setStatus("#contentStatus", `저장 실패: ${error.message}`, "error");
+        }
+      });
+
+      document.querySelector("#saveApiButton").addEventListener("click", async () => {
+        try {
+          await saveJson("/aura-admin/settings/save/", adminSettings, "#apiStatus", "LLM API key 설정을 저장했습니다.");
+        } catch (error) {
+          setStatus("#apiStatus", `저장 실패: ${error.message}`, "error");
+        }
+      });
+
+      document.querySelector("#savePhotosButton").addEventListener("click", async () => {
+        try {
+          readPhotos();
+          await saveJson("/aura-admin/settings/save/", adminSettings, "#photosStatus", "사진 설정을 저장했습니다.");
+        } catch (error) {
+          setStatus("#photosStatus", `저장 실패: ${error.message}`, "error");
+        }
+      });
+
+      document.querySelector("#saveStylesButton").addEventListener("click", async () => {
+        try {
+          readStyles();
+          await saveJson("/aura-admin/settings/save/", adminSettings, "#stylesStatus", "스타일 설정을 저장했습니다.");
+        } catch (error) {
+          setStatus("#stylesStatus", `저장 실패: ${error.message}`, "error");
+        }
+      });
+
+      renderContent();
+      renderLlmProviders();
+      renderPhotos();
+      renderStyles();
+    </script>
+  </body>
+</html>

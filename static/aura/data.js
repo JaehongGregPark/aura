@@ -4,11 +4,11 @@ const portfolioData = {
       makeup: "메이크업",
       hair: "헤어",
       fashion: "패션",
-      interior: "인테리어",
+      interior: "인테리어"
     },
     auth: {
       login: "로그인",
-      guest: "게스트",
+      guest: "게스트"
     },
     common: {
       eyebrow: "AI 토탈 스타일 큐레이션",
@@ -28,7 +28,7 @@ const portfolioData = {
       phaseTwo: "Phase 2",
       phaseTwoText: "전문가 상담과 1:1 매칭",
       phaseThree: "Phase 3",
-      phaseThreeText: "헤어, 패션, 인테리어까지 확장",
+      phaseThreeText: "헤어, 패션, 인테리어까지 확장"
     },
     areas: {
       makeup: {
@@ -38,7 +38,7 @@ const portfolioData = {
         report: "Soft Glow Makeup",
         summary: "은은한 피부 표현과 장밋빛 컬러를 중심으로 헤어 톤, 데일리 룩, 공간 무드까지 자연스럽게 이어지는 스타일을 제안합니다.",
         tags: ["Skin-first", "Rose Glow", "Soft Balance"],
-        palette: ["#fff7fa", "#f8ccd9", "#dfb0cf", "#c6bddf", "#76698a"],
+        palette: ["#fff7fa", "#f8ccd9", "#dfb0cf", "#c6bddf", "#76698a"]
       },
       hair: {
         title: "헤어",
@@ -47,7 +47,7 @@ const portfolioData = {
         report: "Airy Hair Balance",
         summary: "부드러운 레이어와 차분한 브라운 톤을 기준으로 얼굴 주변의 빛과 인상을 정돈하는 헤어 방향을 추천합니다.",
         tags: ["Layer", "Tone Match", "Face Line"],
-        palette: ["#fff3eb", "#edc5b2", "#bd8f7a", "#8e6257", "#443239"],
+        palette: ["#fff3eb", "#edc5b2", "#bd8f7a", "#8e6257", "#443239"]
       },
       fashion: {
         title: "패션",
@@ -56,7 +56,7 @@ const portfolioData = {
         report: "Quiet Daily Look",
         summary: "정돈된 실루엣과 포인트 컬러를 섞어 메이크업과 헤어가 따로 보이지 않는 데일리 스타일을 구성합니다.",
         tags: ["Clean Line", "Daily Fit", "Color Point"],
-        palette: ["#fbf7f1", "#d9d1c7", "#9a8f88", "#6d5967", "#302a35"],
+        palette: ["#fbf7f1", "#d9d1c7", "#9a8f88", "#6d5967", "#302a35"]
       },
       interior: {
         title: "인테리어",
@@ -65,8 +65,8 @@ const portfolioData = {
         report: "Calm Living Mood",
         summary: "차분한 조명과 자연 소재를 중심으로 스타일 리포트가 생활 공간에서도 이어지도록 컬러와 오브제 방향을 잡습니다.",
         tags: ["Warm Light", "Object", "Slow Mood"],
-        palette: ["#fbfff8", "#dcebdc", "#a8c7ad", "#6e927a", "#29382f"],
-      },
+        palette: ["#fbfff8", "#dcebdc", "#a8c7ad", "#6e927a", "#29382f"]
+      }
     },
     questions: [
       {
@@ -77,8 +77,8 @@ const portfolioData = {
           ["makeup", "메이크업", "피부 표현과 색조부터 시작"],
           ["hair", "헤어", "컬러와 실루엣 균형"],
           ["fashion", "패션", "데일리 룩과 소재감"],
-          ["interior", "인테리어", "공간 무드와 오브제"],
-        ],
+          ["interior", "인테리어", "공간 무드와 오브제"]
+        ]
       },
       {
         label: "STEP 2",
@@ -88,8 +88,8 @@ const portfolioData = {
           ["minimal", "미니멀", "맑고 정돈된 인상"],
           ["romantic", "로맨틱", "부드럽고 사랑스러운 결"],
           ["modern", "모던", "선명하고 세련된 균형"],
-          ["natural", "내추럴", "편안하고 자연스러운 흐름"],
-        ],
+          ["natural", "내추럴", "편안하고 자연스러운 흐름"]
+        ]
       },
       {
         label: "STEP 3",
@@ -99,9 +99,9 @@ const portfolioData = {
           ["calm", "차분함", "낮은 채도와 안정감"],
           ["glow", "화사함", "밝은 빛과 생기"],
           ["chic", "시크함", "간결한 선과 대비"],
-          ["warm", "따뜻함", "부드러운 온도감"],
-        ],
-      },
+          ["warm", "따뜻함", "부드러운 온도감"]
+        ]
+      }
     ],
     labels: {
       minimal: "미니멀",
@@ -111,7 +111,7 @@ const portfolioData = {
       calm: "차분함",
       glow: "화사함",
       chic: "시크함",
-      warm: "따뜻함",
+      warm: "따뜻함"
     },
     assist: {
       chatAction: "채팅",
@@ -121,15 +121,15 @@ const portfolioData = {
         title: "취향 상담",
         copy: "선택한 섹션과 리포트를 바탕으로 메이크업, 헤어, 패션, 인테리어 질문을 이어갈 수 있어요.",
         primary: "채팅 시작",
-        chips: ["톤 매칭", "제품 추천", "룩 조합", "공간 무드"],
+        chips: ["톤 매칭", "제품 추천", "룩 조합", "공간 무드"]
       },
       expert: {
         eyebrow: "AURA Expert",
         title: "전문가 상담",
         copy: "AI 리포트를 전문가에게 전달해 1:1 스타일 상담으로 이어가는 흐름입니다.",
         primary: "상담 요청",
-        chips: ["메이크업", "헤어", "패션", "인테리어"],
-      },
+        chips: ["메이크업", "헤어", "패션", "인테리어"]
+      }
     },
     chat: {
       startedTitle: "AURA 채팅 시작",
@@ -137,30 +137,28 @@ const portfolioData = {
       send: "메시지 보내기",
       message: "메시지",
       placeholder: "톤, 제품, 헤어, 룩, 공간 무드에 대해 물어보세요.",
-      intro: ({ areaTitle, styleLabel, moodLabel }) =>
-        `${areaTitle} 섹션과 ${styleLabel} ${moodLabel} 무드를 기준으로 상담을 시작할게요.`,
+      introTemplate: "{areaTitle} 섹션과 {styleLabel} {moodLabel} 무드를 기준으로 상담을 시작할게요.",
       you: "나",
-      reply: ({ areaTitle, tag }) =>
-        `좋아요. ${areaTitle}에서는 ${tag} 방향부터 보고, 지금 팔레트와 자연스럽게 연결해볼게요.`,
+      replyTemplate: "좋아요. {areaTitle}에서는 {tag} 방향부터 보고, 지금 팔레트와 자연스럽게 연결해볼게요."
     },
     expert: {
       readyTitle: "상담 요청 준비 완료",
       readyCopy: "현재 리포트를 전문가에게 전달할 준비가 됐어요.",
       readyButton: "요청 준비 완료",
       section: "섹션",
-      report: "리포트",
-    },
+      report: "리포트"
+    }
   },
   en: {
     nav: {
       makeup: "Makeup",
       hair: "Hair",
       fashion: "Fashion",
-      interior: "Interior",
+      interior: "Interior"
     },
     auth: {
       login: "Log in",
-      guest: "Guest",
+      guest: "Guest"
     },
     common: {
       eyebrow: "AI total style curation",
@@ -180,7 +178,7 @@ const portfolioData = {
       phaseTwo: "Phase 2",
       phaseTwoText: "Expert consultation and 1:1 matching",
       phaseThree: "Phase 3",
-      phaseThreeText: "Expansion into hair, fashion, and interiors",
+      phaseThreeText: "Expansion into hair, fashion, and interiors"
     },
     areas: {
       makeup: {
@@ -190,7 +188,7 @@ const portfolioData = {
         report: "Soft Glow Makeup",
         summary: "A soft skin finish and rosy palette become the base for connected hair tone, daily outfits, and living mood.",
         tags: ["Skin-first", "Rose Glow", "Soft Balance"],
-        palette: ["#fff7fa", "#f8ccd9", "#dfb0cf", "#c6bddf", "#76698a"],
+        palette: ["#fff7fa", "#f8ccd9", "#dfb0cf", "#c6bddf", "#76698a"]
       },
       hair: {
         title: "Hair",
@@ -199,7 +197,7 @@ const portfolioData = {
         report: "Airy Hair Balance",
         summary: "Soft layers and calm brown tones refine the light around the face and keep the overall impression balanced.",
         tags: ["Layer", "Tone Match", "Face Line"],
-        palette: ["#fff3eb", "#edc5b2", "#bd8f7a", "#8e6257", "#443239"],
+        palette: ["#fff3eb", "#edc5b2", "#bd8f7a", "#8e6257", "#443239"]
       },
       fashion: {
         title: "Fashion",
@@ -208,7 +206,7 @@ const portfolioData = {
         report: "Quiet Daily Look",
         summary: "Clean silhouettes and measured color points build daily looks that sit naturally with makeup and hair.",
         tags: ["Clean Line", "Daily Fit", "Color Point"],
-        palette: ["#fbf7f1", "#d9d1c7", "#9a8f88", "#6d5967", "#302a35"],
+        palette: ["#fbf7f1", "#d9d1c7", "#9a8f88", "#6d5967", "#302a35"]
       },
       interior: {
         title: "Interior",
@@ -217,8 +215,8 @@ const portfolioData = {
         report: "Calm Living Mood",
         summary: "Soft lighting and natural materials carry the style report into the room through color and object direction.",
         tags: ["Warm Light", "Object", "Slow Mood"],
-        palette: ["#fbfff8", "#dcebdc", "#a8c7ad", "#6e927a", "#29382f"],
-      },
+        palette: ["#fbfff8", "#dcebdc", "#a8c7ad", "#6e927a", "#29382f"]
+      }
     },
     questions: [
       {
@@ -229,8 +227,8 @@ const portfolioData = {
           ["makeup", "Makeup", "Skin finish and color"],
           ["hair", "Hair", "Color and silhouette"],
           ["fashion", "Fashion", "Daily looks and texture"],
-          ["interior", "Interior", "Space mood and objects"],
-        ],
+          ["interior", "Interior", "Space mood and objects"]
+        ]
       },
       {
         label: "STEP 2",
@@ -240,8 +238,8 @@ const portfolioData = {
           ["minimal", "Minimal", "Clean and refined"],
           ["romantic", "Romantic", "Soft and lovely"],
           ["modern", "Modern", "Clear and polished"],
-          ["natural", "Natural", "Easy and effortless"],
-        ],
+          ["natural", "Natural", "Easy and effortless"]
+        ]
       },
       {
         label: "STEP 3",
@@ -251,9 +249,9 @@ const portfolioData = {
           ["calm", "Calm", "Low tone and stable"],
           ["glow", "Glow", "Bright and lively"],
           ["chic", "Chic", "Clean contrast"],
-          ["warm", "Warm", "Soft temperature"],
-        ],
-      },
+          ["warm", "Warm", "Soft temperature"]
+        ]
+      }
     ],
     labels: {
       minimal: "Minimal",
@@ -263,7 +261,7 @@ const portfolioData = {
       calm: "Calm",
       glow: "Glow",
       chic: "Chic",
-      warm: "Warm",
+      warm: "Warm"
     },
     assist: {
       chatAction: "Chat",
@@ -273,15 +271,15 @@ const portfolioData = {
         title: "Taste chat",
         copy: "Continue with quick questions about makeup, hair, fashion, and interiors based on the current report.",
         primary: "Start chat",
-        chips: ["Tone match", "Product picks", "Look pairing", "Room mood"],
+        chips: ["Tone match", "Product picks", "Look pairing", "Room mood"]
       },
       expert: {
         eyebrow: "AURA Expert",
         title: "Expert consultation",
         copy: "Send your AI report into a 1:1 consultation flow with a style expert.",
         primary: "Request consult",
-        chips: ["Makeup", "Hair", "Fashion", "Interior"],
-      },
+        chips: ["Makeup", "Hair", "Fashion", "Interior"]
+      }
     },
     chat: {
       startedTitle: "AURA Chat Started",
@@ -289,18 +287,16 @@ const portfolioData = {
       send: "Send message",
       message: "Message",
       placeholder: "Ask about tone, products, hair, outfits, or space mood.",
-      intro: ({ areaTitle, styleLabel, moodLabel }) =>
-        `AURA will start the consultation with the ${areaTitle} section and your ${styleLabel} ${moodLabel} mood.`,
+      introTemplate: "AURA will start the consultation with the {areaTitle} section and your {styleLabel} {moodLabel} mood.",
       you: "You",
-      reply: ({ areaTitle, tag }) =>
-        `Good. For ${areaTitle}, I would start from ${tag} and connect it with your current palette.`,
+      replyTemplate: "Good. For {areaTitle}, I would start from {tag} and connect it with your current palette."
     },
     expert: {
       readyTitle: "Consult Request Ready",
       readyCopy: "Your current report is ready to hand off to an expert.",
       readyButton: "Request ready",
       section: "Section",
-      report: "Report",
-    },
-  },
+      report: "Report"
+    }
+  }
 };

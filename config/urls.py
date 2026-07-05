@@ -19,7 +19,18 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
 
+from . import views
+
 urlpatterns = [
     path("", TemplateView.as_view(template_name="index.html"), name="home"),
+    path("api/content/", views.content_api, name="content_api"),
+    path("api/admin-settings/", views.admin_settings_api, name="admin_settings_api"),
+    path("aura-admin/", views.content_admin, name="content_admin"),
+    path("aura-admin/save/", views.content_admin_save, name="content_admin_save"),
+    path(
+        "aura-admin/settings/save/",
+        views.admin_settings_save,
+        name="admin_settings_save",
+    ),
     path("admin/", admin.site.urls),
 ]

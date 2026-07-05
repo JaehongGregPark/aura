@@ -1,0 +1,53 @@
+{
+  "llmProviders": {
+    "chatgpt": {
+      "label": "CHATGPT",
+      "enabled": true,
+      "apiKey": "",
+      "version": "gpt-4.1-mini",
+      "memo": "AI 상담 기본 모델"
+    },
+    "gemini": {
+      "label": "GEMINI",
+      "enabled": false,
+      "apiKey": "",
+      "version": "gemini-1.5-pro",
+      "memo": ""
+    },
+    "claude": {
+      "label": "CLAUDE",
+      "enabled": false,
+      "apiKey": "",
+      "version": "claude-3-5-sonnet",
+      "memo": ""
+    }
+  },
+  "questionTypes": {
+    "ko": [
+      {
+        "id": "makeup_consult",
+        "label": "메이크업 상담",
+        "promptType": "consultation",
+        "enabled": true
+      }
+    ],
+    "en": [
+      {
+        "id": "makeup_consult",
+        "label": "Makeup consultation",
+        "promptType": "consultation",
+        "enabled": true
+      }
+    ]
+  },
+  "photos": {
+    "heroImage": "static/aura/assets/aura-preview.webp",
+    "reportImage": "static/aura/assets/aura-reference.webp",
+    "gallery": []
+  },
+  "styles": {
+    "defaultArea": "makeup",
+    "autoCycle": true,
+    "themeMemo": "AURA 기본 스타일"
+  }
+}
