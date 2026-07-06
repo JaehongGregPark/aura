@@ -29,6 +29,12 @@ python manage.py runserver 127.0.0.1:4174
 | `DJANGO_SECRET_KEY` | Django 시크릿 키 | 로컬 개발용 더미 값 |
 | `DJANGO_DEBUG` | 디버그 모드 (`True`/`False`) | `True` |
 | `DJANGO_ALLOWED_HOSTS` | 허용 호스트(콤마 구분) | `127.0.0.1,localhost,.ngrok-free.dev` |
+| `EMAIL_HOST` | SMTP 호스트 (Hiworks) | `smtps.hiworks.com` |
+| `EMAIL_PORT` | SMTP 포트 | `465` |
+| `EMAIL_USE_SSL` | SSL 사용 여부 | `True` |
+| `EMAIL_HOST_USER` | 발신 계정 (전체 이메일 주소, 로그인 ID만은 안 됨) | 없음 (필수) |
+| `EMAIL_HOST_PASSWORD` | 발신 계정 비밀번호 | 없음 (필수) |
+| `DEFAULT_FROM_EMAIL` | 발신자 표시 주소 | `EMAIL_HOST_USER`와 동일 |
 
 ## 프로젝트 구조
 

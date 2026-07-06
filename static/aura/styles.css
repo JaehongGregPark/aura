@@ -248,6 +248,30 @@ button {
   background: var(--accent);
 }
 
+.guest-entry {
+  margin-top: 4px;
+}
+
+.guest-entry .auth-button {
+  width: auto;
+  min-height: auto;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.guest-entry .auth-button.is-active,
+.guest-entry .auth-button:hover {
+  color: var(--ink);
+  background: transparent;
+  border-color: transparent;
+}
+
 .content-grid {
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(330px, 1.05fr);

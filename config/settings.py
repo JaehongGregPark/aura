@@ -132,3 +132,18 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 # Prototype auth uses JSON member storage, so signed-cookie sessions keep local
 # runs independent from database migrations. Revisit before production launch.
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+
+
+# Email (Hiworks SMTP)
+# https://docs.djangoproject.com/en/6.0/topics/email/
+# Set EMAIL_HOST_USER / EMAIL_HOST_PASSWORD in the environment (or .env).
+# EMAIL_HOST_USER must be the full Hiworks email address (e.g. name@yourdomain.com),
+# not just the login ID.
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtps.hiworks.com")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "465"))
+EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "True") == "True"
+EMAIL_USE_TLS = False
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)

@@ -1,9 +1,11 @@
 import json
+import smtplib
 import uuid
 from json import JSONDecodeError
 
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
+from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
@@ -439,6 +441,32 @@ def members_save(request):
     return JsonResponse({"ok": True})
 
 
+def _send_member_email(recipient, subject, message):
+    """Send a real email via the configured SMTP backend (Hiworks).
+
+    Returns (status, note) where status is "sent" or "failed".
+    """
+    if not settings.EMAIL_HOST_USER or not settings.EMAIL_HOST_PASSWORD:
+        return (
+            "failed",
+            "이메일 계정 정보(EMAIL_HOST_USER / EMAIL_HOST_PASSWORD)가 설정되지 않았습니다. "
+            ".env를 확인해 주세요.",
+        )
+
+    try:
+        send_mail(
+            subject or "AURA 안내",
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [recipient],
+            fail_silently=False,
+        )
+    except (smtplib.SMTPException, OSError) as error:
+        return "failed", f"이메일 발송 실패: {error}"
+
+    return "sent", f"{recipient} 앞으로 이메일을 발송했습니다."
+
+
 @require_POST
 def member_message_send(request):
     try:
@@ -462,15 +490,33 @@ def member_message_send(request):
     if not member:
         return JsonResponse({"ok": False, "error": "Member not found."}, status=404)
 
+    if channel == "email":
+        recipient = (member.get("email") or "").strip()
+        if not recipient:
+            return JsonResponse(
+                {"ok": False, "error": "이 회원은 등록된 이메일 주소가 없습니다."},
+                status=400,
+            )
+        status, note = _send_member_email(recipient, subject, message)
+    else:
+        status, note = (
+            "logged",
+            "챗 발송 API 미연동 상태이므로 관리자 발송 기록만 저장했습니다.",
+        )
+
     data["messageLogs"].append(
         {
             "memberId": member_id,
             "channel": channel,
             "subject": subject,
             "message": message,
-            "status": "logged",
-            "note": "외부 발송 API 미연동 상태이므로 관리자 발송 기록만 저장했습니다.",
+            "status": status,
+            "note": note,
         }
     )
     _write_members(data)
-    return JsonResponse({"ok": True, "status": "logged"})
+
+    if status == "failed":
+        return JsonResponse({"ok": False, "error": note, "status": status}, status=502)
+
+    return JsonResponse({"ok": True, "status": status})
