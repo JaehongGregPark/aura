@@ -1,0 +1,6 @@
+# [사용 안 함] 이 서버(가비아 베이직 컨테이너 호스팅)는 root/sudo가 없고 systemctl도
+# 못 쓰는 비특권 컨테이너로 확인됐습니다 (whoami=guser, uid=1000, sudo 없음).
+# 이 systemd 유닛 파일은 이 환경에서 등록할 수 없습니다.
+#
+# 대신 deploy/start_gunicorn.sh + deploy/ensure_running.sh (crontab) 조합을 쓰세요.
+# 나중에 root 권한이 있는 VPS로 옮기게 되면 이 파일을 다시 참고하면 됩니다.

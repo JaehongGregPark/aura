@@ -39,6 +39,15 @@ ALLOWED_HOSTS = [
     if host.strip()
 ]
 
+# nginx가 리버스 프록시로 X-Forwarded-Proto 헤더를 붙여주므로, Django가 원 요청이
+# https였는지 이 헤더로 판단하게 함 (없으면 /admin/ 등에서 CSRF 오류가 날 수 있음).
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+CSRF_TRUSTED_ORIGINS = [
+    f"https://{host}" for host in ALLOWED_HOSTS if host and not host.startswith(".")
+] + [
+    f"https://*{host}" for host in ALLOWED_HOSTS if host.startswith(".")
+]
+
 
 # Application definition
 
@@ -53,6 +62,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -126,8 +136,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"  # whitenoise가 prefix 매칭할 때 앞 슬래시가 있어야 정상 동작함
 STATICFILES_DIRS = [BASE_DIR / "static"]
+# `collectstatic`이 파일을 모아두는 배포용 디렉터리.
+# nginx가 없는 환경이라 WhiteNoise가 이 경로의 파일을 장고 프로세스 안에서 직접 서빙함.
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Prototype auth uses JSON member storage, so signed-cookie sessions keep local
 # runs independent from database migrations. Revisit before production launch.
@@ -143,7 +161,9 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtps.hiworks.com")
 EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "465"))
 EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "True") == "True"
-EMAIL_USE_TLS = False
+# 네이버 등 587 포트(STARTTLS) SMTP를 쓸 경우 .env에서 EMAIL_USE_TLS=True,
+# EMAIL_USE_SSL=False로 설정하세요. 예전엔 이 값이 False로 고정돼 있었습니다.
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "False") == "True"
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)

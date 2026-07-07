@@ -13,6 +13,8 @@ env/
 db.sqlite3
 db.sqlite3-journal
 *.log
+staticfiles/
+gunicorn.pid
 
 # Environment variables
 .env
