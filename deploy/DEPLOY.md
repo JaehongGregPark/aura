@@ -29,6 +29,18 @@ python manage.py migrate
 python manage.py collectstatic --noinput
 ```
 
+`/aura-admin/` 및 관련 저장 API는 Django staff 계정 로그인이 있어야 접근 가능하도록
+막아뒀습니다 (`config/views.py`의 `staff_required_json`/`staff_member_required` — 이전엔
+URL만 알면 로그인 없이 누구나 회원 정보 조회, 콘텐츠/LLM 키 덮어쓰기, 회원 앞 이메일
+발송까지 가능했던 취약점이 있었습니다). **최초 배포 시 반드시 staff 계정을 만들어야
+관리자 화면에 들어갈 수 있습니다:**
+
+```bash
+python manage.py createsuperuser
+```
+
+이후 `/admin/`에서 로그인하면 같은 브라우저 세션으로 `/aura-admin/`도 접근됩니다.
+
 ## 3. gunicorn 실행
 
 ```bash

@@ -1,9 +1,11 @@
 import json
 import smtplib
 import uuid
+from functools import wraps
 from json import JSONDecodeError
 
 from django.conf import settings
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.hashers import check_password, make_password
 from django.core.mail import send_mail
 from django.http import JsonResponse
@@ -11,6 +13,33 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
+
+
+def staff_required_json(view_func):
+    """Guard for the /aura-admin/ JSON endpoints.
+
+    These previously had NO auth check at all (see the "실제 배포 전 필수
+    전환" note in content_admin.html) -- anyone who found the URL could read
+    member PII, overwrite site content, rewrite LLM provider settings, or
+    send email as any member via member_message_send. Until the JSON-file
+    storage is migrated to a real Django-auth-backed admin, this at least
+    requires a Django staff account (created via `createsuperuser` /
+    `/admin/`) before any of those actions are allowed.
+
+    Returns JSON (not an HTML login redirect) so the admin panel's fetch()
+    calls fail with a readable error instead of parsing a login page as JSON.
+    """
+
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if not (request.user.is_authenticated and request.user.is_staff):
+            return JsonResponse(
+                {"ok": False, "error": "관리자 로그인이 필요합니다. /admin/ 에서 로그인 후 다시 시도하세요."},
+                status=403,
+            )
+        return view_func(request, *args, **kwargs)
+
+    return wrapper
 
 
 CONTENT_PATH = settings.BASE_DIR / "static" / "aura" / "content.json"
@@ -219,6 +248,7 @@ def content_api(request):
     return JsonResponse(_read_content(), json_dumps_params={"ensure_ascii": False})
 
 
+@staff_member_required
 @require_GET
 def content_admin(request):
     admin_settings = _public_admin_settings(_read_admin_settings())
@@ -234,6 +264,7 @@ def content_admin(request):
     )
 
 
+@staff_required_json
 @require_POST
 def content_admin_save(request):
     try:
@@ -251,6 +282,7 @@ def content_admin_save(request):
     return JsonResponse({"ok": True})
 
 
+@staff_required_json
 @require_GET
 def admin_settings_api(request):
     return JsonResponse(
@@ -259,6 +291,7 @@ def admin_settings_api(request):
     )
 
 
+@staff_required_json
 @require_POST
 def admin_settings_save(request):
     try:
@@ -299,6 +332,7 @@ def admin_settings_save(request):
     return JsonResponse({"ok": True})
 
 
+@staff_required_json
 @require_GET
 def members_api(request):
     data = _read_members()
@@ -419,6 +453,7 @@ def auth_logout(request):
     return JsonResponse({"ok": True})
 
 
+@staff_required_json
 @require_POST
 def members_save(request):
     try:
@@ -467,6 +502,7 @@ def _send_member_email(recipient, subject, message):
     return "sent", f"{recipient} 앞으로 이메일을 발송했습니다."
 
 
+@staff_required_json
 @require_POST
 def member_message_send(request):
     try:

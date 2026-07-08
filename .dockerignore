@@ -1,0 +1,19 @@
+# .gitignore와 동일한 이유 - db.sqlite3, config/aura_members.json,
+# config/aura_admin_settings.json(PII/키)은 이미지에 구워 넣지 않고 볼륨으로 마운트합니다.
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+db.sqlite3
+db.sqlite3-journal
+*.log
+staticfiles/
+gunicorn.pid
+.env
+config/aura_members.json
+config/aura_admin_settings.json
+.git/
+.idea/
+.vscode/
